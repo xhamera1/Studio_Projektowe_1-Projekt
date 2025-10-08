@@ -16,4 +16,4 @@ A detailed project plan is available here: [**PROJECT_PLAN.md**](docs/PROJECT_PL
 | Karol Bystrek     | [email2@example.com]          |
 | Mateusz Bielówka  | [email3@example.com]          |
 | Berenike Banek    | [email4@example.com]          |
-| Maksim Dziatkou   | [email5@example.com]          |
+| Maksim Dziatkou   | mdziatkou@student.agh.edu.pl  |
