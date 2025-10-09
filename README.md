@@ -13,7 +13,7 @@ A detailed project plan is available here: [**PROJECT_PLAN.md**](docs/PROJECT_PL
 | Name              | Email                         |
 | :---------------- | :---------------------------- |
 | Patryk Chamera    | pchamera@student.agh.edu.pl   |
-| Karol Bystrek     | [email2@example.com]          |
+| Karol Bystrek     | karbystrek@student.agh.edu.pl |          |
 | Mateusz Bielówka  | [email3@example.com]          |
 | Berenike Banek    | [email4@example.com]          |
 | Maksim Dziatkou   | mdziatkou@student.agh.edu.pl  |
