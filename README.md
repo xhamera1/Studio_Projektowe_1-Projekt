@@ -14,6 +14,6 @@ A detailed project plan is available here: [**PROJECT_PLAN.md**](docs/PROJECT_PL
 | :---------------- | :---------------------------- |
 | Patryk Chamera    | pchamera@student.agh.edu.pl   |
 | Karol Bystrek     | karbystrek@student.agh.edu.pl |          |
-| Mateusz Bielówka  | [email3@example.com]          |
+| Mateusz Bielówka  | mbielowka@student.agh.edu.pl  |
 | Berenike Banek    | [email4@example.com]          |
 | Maksim Dziatkou   | mdziatkou@student.agh.edu.pl  |
