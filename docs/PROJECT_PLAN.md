@@ -5,7 +5,7 @@
 | Name              | Email                       |
 | :---------------- | :-------------------------- |
 | Patryk Chamera    | pchamera@student.agh.edu.pl |
-| Karol Bystrek     | [email2@example.com]        |
+| Karol Bystrek     | karbystrek@student.agh.edu.pl        |
 | Mateusz Bielówka  | mbielowka@student.agh.edu.pl|
 | Berenike Banek    | berenike@student.agh.edu.pl |
 | Maksim Dziatkou   | mdziatkou@student.agh.edu.pl |
