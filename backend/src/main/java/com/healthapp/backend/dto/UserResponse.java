@@ -17,7 +17,7 @@ public record UserResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static UserResponse createUserResponseFor(User user) {
+    public static UserResponse createUserResponseFrom(User user) {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())

@@ -2,7 +2,6 @@ package com.healthapp.backend.controller;
 
 import com.healthapp.backend.dto.LoginRequest;
 import com.healthapp.backend.dto.LoginResponse;
-import com.healthapp.backend.dto.SignupRequest;
 import com.healthapp.backend.model.JwtToken;
 import com.healthapp.backend.model.User;
 import com.healthapp.backend.service.AuthenticationService;
@@ -27,12 +26,6 @@ public class AuthenticationController {
 
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
-
-    @PostMapping(value = "/signup", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public void signup(@RequestBody @Valid SignupRequest request) {
-        log.info("Received signup request: {}", request);
-        authenticationService.registerUser(request);
-    }
 
     @PostMapping(value = "/login", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public LoginResponse login(@RequestBody @Valid LoginRequest request) {
