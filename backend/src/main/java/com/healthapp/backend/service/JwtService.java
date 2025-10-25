@@ -1,6 +1,6 @@
 package com.healthapp.backend.service;
 
-import com.healthapp.backend.model.JwtToken;
+import com.healthapp.backend.dto.authentication.JwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

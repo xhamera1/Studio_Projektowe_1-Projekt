@@ -1,4 +1,4 @@
-package com.healthapp.backend.dto;
+package com.healthapp.backend.dto.user;
 
 import com.healthapp.backend.model.User;
 import com.healthapp.backend.model.User.Role;

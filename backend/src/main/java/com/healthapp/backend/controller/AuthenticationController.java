@@ -1,8 +1,8 @@
 package com.healthapp.backend.controller;
 
-import com.healthapp.backend.dto.LoginRequest;
-import com.healthapp.backend.dto.LoginResponse;
-import com.healthapp.backend.model.JwtToken;
+import com.healthapp.backend.dto.authentication.JwtToken;
+import com.healthapp.backend.dto.authentication.LoginRequest;
+import com.healthapp.backend.dto.authentication.LoginResponse;
 import com.healthapp.backend.model.User;
 import com.healthapp.backend.service.AuthenticationService;
 import com.healthapp.backend.service.JwtService;

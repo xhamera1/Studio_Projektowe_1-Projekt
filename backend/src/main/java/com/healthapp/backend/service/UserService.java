@@ -1,7 +1,7 @@
 package com.healthapp.backend.service;
 
-import com.healthapp.backend.dto.SignupRequest;
-import com.healthapp.backend.dto.UserEditRequest;
+import com.healthapp.backend.dto.user.SignupRequest;
+import com.healthapp.backend.dto.user.UserEditRequest;
 import com.healthapp.backend.exception.UserNotFoundException;
 import com.healthapp.backend.model.User;
 import com.healthapp.backend.repository.UserRepository;

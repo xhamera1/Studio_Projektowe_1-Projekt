@@ -1,6 +1,6 @@
 package com.healthapp.backend.service;
 
-import com.healthapp.backend.dto.LoginRequest;
+import com.healthapp.backend.dto.authentication.LoginRequest;
 import com.healthapp.backend.exception.UserNotFoundException;
 import com.healthapp.backend.model.User;
 import com.healthapp.backend.repository.UserRepository;

@@ -1,8 +1,8 @@
 package com.healthapp.backend.controller;
 
-import com.healthapp.backend.dto.SignupRequest;
-import com.healthapp.backend.dto.UserEditRequest;
-import com.healthapp.backend.dto.UserResponse;
+import com.healthapp.backend.dto.user.SignupRequest;
+import com.healthapp.backend.dto.user.UserEditRequest;
+import com.healthapp.backend.dto.user.UserResponse;
 import com.healthapp.backend.model.User;
 import com.healthapp.backend.service.UserService;
 import jakarta.validation.Valid;
@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import static com.healthapp.backend.dto.UserResponse.createUserResponseFrom;
+import static com.healthapp.backend.dto.user.UserResponse.createUserResponseFrom;
 import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
