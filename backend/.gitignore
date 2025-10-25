@@ -180,6 +180,7 @@ build/
 .vscode/
 
 ### Some additional ignores (sort later)
+.env
 *.DS_Store
 *.sw?
 .#*

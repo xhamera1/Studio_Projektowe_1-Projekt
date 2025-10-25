@@ -1,5 +1,6 @@
 package com.healthapp.backend.exception;
 
+import com.google.genai.errors.ClientException;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.ProblemDetail.forStatusAndDetail;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -26,7 +28,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ProblemDetail handleUserNotFoundException(UserNotFoundException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(NOT_FOUND, ex.getMessage());
+        ProblemDetail problemDetail = forStatusAndDetail(NOT_FOUND, ex.getMessage());
         problemDetail.setTitle("User Not Found");
         problemDetail.setProperty("timestamp", now());
 
@@ -35,9 +37,19 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(ClientException.class)
+    public ProblemDetail handleClientException(ClientException ex) {
+        ProblemDetail problemDetail = forStatusAndDetail(INTERNAL_SERVER_ERROR, "Error communicating with external LLM service");
+        problemDetail.setTitle("External Service Error");
+        problemDetail.setProperty("timestamp", now());
+
+        log.error("LLM ClientException: Message - {}", ex.getMessage());
+        return problemDetail;
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ProblemDetail handleAccessDeniedException(AccessDeniedException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(FORBIDDEN, "Access denied to the requested resource");
+        ProblemDetail problemDetail = forStatusAndDetail(FORBIDDEN, "Access denied to the requested resource");
         problemDetail.setTitle("Access Denied");
         problemDetail.setProperty("timestamp", now());
 
@@ -47,7 +59,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({AuthenticationException.class, BadCredentialsException.class})
     public ProblemDetail handleAuthenticationException(Exception ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(UNAUTHORIZED, "Authentication failed due to invalid credentials");
+        ProblemDetail problemDetail = forStatusAndDetail(UNAUTHORIZED, "Authentication failed due to invalid credentials");
         problemDetail.setTitle("Authentication Failed");
         problemDetail.setProperty("timestamp", now());
 
@@ -64,7 +76,7 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, "Validation failed for one or more fields");
+        ProblemDetail problemDetail = forStatusAndDetail(BAD_REQUEST, "Validation failed for one or more fields");
         problemDetail.setTitle("Validation Error");
         problemDetail.setProperty("timestamp", now());
         problemDetail.setProperty("errors", errors);
@@ -79,7 +91,7 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         ex.getConstraintViolations().forEach(error -> errors.put(error.getPropertyPath().toString(), error.getMessage()));
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, "Constraint validation in request parameters");
+        ProblemDetail problemDetail = forStatusAndDetail(BAD_REQUEST, "Constraint validation in request parameters");
         problemDetail.setTitle("Constraint Declaration Error");
         problemDetail.setProperty("timestamp", now());
         problemDetail.setProperty("errors", errors);
@@ -92,7 +104,7 @@ public class GlobalExceptionHandler {
     // Handle resource not found exceptions for non-existing endpoints
     @ExceptionHandler(NoResourceFoundException.class)
     public ProblemDetail handleNoResourceFoundException(NoResourceFoundException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(NOT_FOUND, "The requested resource was not found");
+        ProblemDetail problemDetail = forStatusAndDetail(NOT_FOUND, "The requested resource was not found");
         problemDetail.setTitle("Resource Not Found");
         problemDetail.setProperty("timestamp", now());
 
@@ -102,7 +114,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ProblemDetail handleIllegalArgumentException(IllegalArgumentException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(BAD_REQUEST, ex.getMessage());
+        ProblemDetail problemDetail = forStatusAndDetail(BAD_REQUEST, ex.getMessage());
         problemDetail.setTitle("Illegal Argument");
         problemDetail.setProperty("timestamp", now());
 
@@ -114,7 +126,7 @@ public class GlobalExceptionHandler {
     // Generic fallback exception handler
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGenericException(Exception ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        ProblemDetail problemDetail = forStatusAndDetail(INTERNAL_SERVER_ERROR, "An unexpected error occurred");
         problemDetail.setTitle("Internal Server Error");
         problemDetail.setProperty("timestamp", now());
 

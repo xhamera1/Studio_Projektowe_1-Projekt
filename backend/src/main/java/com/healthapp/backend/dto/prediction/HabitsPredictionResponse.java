@@ -1,4 +1,6 @@
 package com.healthapp.backend.dto.prediction;
 
-public record HabitsPredictionResponse() {
+public record HabitsPredictionResponse(
+        String response
+) {
 }
