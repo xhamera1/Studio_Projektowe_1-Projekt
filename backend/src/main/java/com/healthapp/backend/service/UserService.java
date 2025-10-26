@@ -2,6 +2,7 @@ package com.healthapp.backend.service;
 
 import com.healthapp.backend.dto.user.SignupRequest;
 import com.healthapp.backend.dto.user.UserEditRequest;
+import com.healthapp.backend.exception.UserAlreadyExistsException;
 import com.healthapp.backend.exception.UserNotFoundException;
 import com.healthapp.backend.model.User;
 import com.healthapp.backend.repository.UserRepository;
@@ -28,7 +29,11 @@ public class UserService {
     }
 
     public User createUser(SignupRequest request) {
-        final User user = User.builder()
+        if (userRepository.existsByUsernameOrEmail(request.username(), request.email())) {
+            throw new UserAlreadyExistsException("User already exists with given username or email");
+        }
+
+        User user = User.builder()
                 .username(request.username())
                 .email(request.email())
                 .firstName(request.firstName())

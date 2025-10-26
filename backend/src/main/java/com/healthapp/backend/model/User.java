@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -24,7 +26,7 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private Integer id;
 

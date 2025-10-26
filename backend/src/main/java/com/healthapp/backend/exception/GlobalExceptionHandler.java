@@ -37,6 +37,17 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ProblemDetail handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        ProblemDetail problemDetail = forStatusAndDetail(CONFLICT, ex.getMessage());
+        problemDetail.setTitle("User Already Exists");
+        problemDetail.setProperty("timestamp", now());
+
+        log.warn("User already exists: {}", ex.getMessage());
+        return problemDetail;
+
+    }
+
     @ExceptionHandler(ClientException.class)
     public ProblemDetail handleClientException(ClientException ex) {
         ProblemDetail problemDetail = forStatusAndDetail(INTERNAL_SERVER_ERROR, "Error communicating with external LLM service");
