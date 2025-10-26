@@ -1,41 +1,29 @@
-import { useContext } from 'react'
-import { Routes, Route } from 'react-router-dom'
-import ProtectedRoute from './components/ProtectedRoute'
-import { AuthContext } from './contexts/AuthContext.tsx'
-import Login from './pages/Login'
-import Signup from './pages/Signup.tsx'
-import Account from './pages/Account.tsx'
-import Button from "@mui/material/Button";
+import {ApplicationContextProvider} from "./contexts/ApplicationContextProvider.tsx";
+import {Route, Routes} from "react-router-dom";
+import Signup from "./pages/Signup.tsx";
+import Login from "./pages/Login.tsx";
+import Home from "./pages/Home.tsx";
+import Account from "./pages/Account.tsx";
+import QuestionnaireRoutes from "./routes/QuestionnaireRoutes.tsx";
+import NotFound from "./pages/NotFound.tsx";
+import ProtectedRoutes from "./routes/ProtectedRoutes.tsx";
+import {AuthProvider} from "./contexts/AuthProvider.tsx";
 
-/* This function component is a simple protected dashboard view visible only when logged in.
-   It shows a logout button which clears the stored token and axios header. */
-function Dashboard() {
-    const { logout } = useContext(AuthContext)
-    return (
-        <div className="card">
-            <h1>Dashboard</h1>
-            <nav>
-                <Button
-                type="submit"
-                variant="contained"
-                onClick={() => logout()}>Logout</Button>
-            </nav>
-        </div>
-    )
+function App() {
+  return <ApplicationContextProvider>
+    <AuthProvider>
+      <Routes>
+        <Route path={"/signup"} element={<Signup/>}/>
+        <Route path={"/login"} element={<Login/>}/>
+        <Route element={<ProtectedRoutes/>}>
+          <Route path={"/"} element={<Home/>}/>
+          <Route path={"/account"} element={<Account/>}/>
+          <Route path={"/questionnaire/*"} element={<QuestionnaireRoutes/>}/>
+        </Route>
+        <Route path={"*"} element={<NotFound/>}/>
+      </Routes>
+    </AuthProvider>
+  </ApplicationContextProvider>;
 }
 
-/* This component wires up the app routes: /login and /signup are public, while "/" is protected.
-   It renders navigation links and the routes used across the app. */
-export default function App() {
-    return (
-        <div className="App">
-            <h1>Studio Projektowe — Frontend</h1>
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
-            </Routes>
-        </div>
-    )
-}
+export default App;

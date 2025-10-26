@@ -1,4 +1,4 @@
-package com.healthapp.backend.dto;
+package com.healthapp.backend.dto.user;
 
 import com.healthapp.backend.model.User;
 import com.healthapp.backend.model.User.Role;
@@ -17,7 +17,7 @@ public record UserResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static UserResponse createUserResponseFor(User user) {
+    public static UserResponse createUserResponseFrom(User user) {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())

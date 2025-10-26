@@ -1,4 +1,4 @@
-package com.healthapp.backend.dto;
+package com.healthapp.backend.dto.authentication;
 
 import jakarta.validation.constraints.NotBlank;
 

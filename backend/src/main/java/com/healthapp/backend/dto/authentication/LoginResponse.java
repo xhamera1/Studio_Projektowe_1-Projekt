@@ -1,10 +1,10 @@
-package com.healthapp.backend.dto;
+package com.healthapp.backend.dto.authentication;
 
-import com.healthapp.backend.model.JwtToken;
+import com.healthapp.backend.dto.user.UserResponse;
 import com.healthapp.backend.model.User;
 import lombok.Builder;
 
-import static com.healthapp.backend.dto.UserResponse.createUserResponseFor;
+import static com.healthapp.backend.dto.user.UserResponse.createUserResponseFrom;
 
 
 @Builder
@@ -14,7 +14,7 @@ public record LoginResponse(
 ) {
     public static LoginResponse createLoginResponseFor(User user, JwtToken token) {
         return LoginResponse.builder()
-                .user(createUserResponseFor(user))
+                .user(createUserResponseFrom(user))
                 .jwtToken(token)
                 .build();
     }
