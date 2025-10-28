@@ -16,6 +16,9 @@ A systematic approach was undertaken to analyze, clean, and prepare the data for
 
 Initial analysis revealed a dataset of 100,000 rows and 9 columns with no missing values. However, 3,854 duplicate entries were identified and subsequently removed, resulting in a cleaned dataset of 96,146 unique records. The dataset exhibited a significant class imbalance, with only about 8.5% of the records corresponding to patients with diabetes. Categorical features like `gender` and `smoking_history` were encoded into numerical format using label encoding to make them suitable for machine learning algorithms.
 
+![Smoking history feature encoding](./plots/smoking-history-encoding.jpg)
+*Figure: Encoding of smoking history categories into numerical values*
+
 #### **2.2. Feature Selection and Data Splitting**
 
 To identify the most influential predictors, feature importance was evaluated using a Random Forest Classifier. The analysis highlighted that **HbA1c level** and **blood glucose level** were the most significant predictors. The top five features were selected for model training to reduce dimensionality and improve model efficiency.
