@@ -7,11 +7,11 @@ import Account from "./pages/Account.tsx";
 import QuestionnaireRoutes from "./routes/QuestionnaireRoutes.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import ProtectedRoutes from "./routes/ProtectedRoutes.tsx";
-import {AuthProvider} from "./contexts/AuthProvider.tsx";
+import {AuthenticationContextProvider} from "./contexts/AuthenticationContextProvider.tsx";
 
 function App() {
   return <ApplicationContextProvider>
-    <AuthProvider>
+    <AuthenticationContextProvider>
       <Routes>
         <Route path={"/signup"} element={<Signup/>}/>
         <Route path={"/login"} element={<Login/>}/>
@@ -22,7 +22,7 @@ function App() {
         </Route>
         <Route path={"*"} element={<NotFound/>}/>
       </Routes>
-    </AuthProvider>
+    </AuthenticationContextProvider>
   </ApplicationContextProvider>;
 }
 

@@ -11,16 +11,16 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import {styled} from '@mui/material/styles';
-import {useNavigate} from "react-router-dom";
-import {useMutation} from "@tanstack/react-query";
-import {registerUser} from "../services/auth.ts";
-import {useContext, useState} from "react";
-import {AuthContext} from "../contexts/AuthContext.tsx";
+import {Navigate} from "react-router-dom";
+import {useState} from "react";
+import {useAuthenticationContext} from "../contexts/AuthenticationContextProvider.tsx";
+import {type SignupRequest, useSignup} from "../hooks/useSignup.ts";
 
 const Card = styled(MuiCard)(({theme}) => ({
     display: 'flex',
     flexDirection: 'column',
     alignSelf: 'center',
+    overflow: 'visible',
     width: '100%',
     padding: theme.spacing(4),
     gap: theme.spacing(2),
@@ -60,31 +60,54 @@ const SignUpContainer = styled(Stack)(({theme}) => ({
 }));
 
 export default function Signup() {
-    const { login } = useContext(AuthContext);
-    const navigate = useNavigate()
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = React.useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+    const { isAuthenticated } = useAuthenticationContext();
+    const { mutate: signup, isPending } = useSignup();
+    // const { login } = useContext(AuthContext);
+    // const navigate = useNavigate()
+    const [credentials, setCredentials] = useState<SignupRequest>({
+        username: '',
+        password: '',
+        email: '',
+        firstName: '',
+        lastName: '',
+    });
+    const [usernameError, setUsernameError] = React.useState(false);
+    const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('');
     const [passwordError, setPasswordError] = React.useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-
-    const mutation = useMutation({
-        mutationFn: (creds: { email: string; password: string }) => registerUser(creds),
-        onSuccess: (res) => {
-            const token = res?.token;
-            if (token) {
-                login(token);
-                navigate('/', {replace: true});
-            }
-        },
-    })
+    const [emailError, setEmailError] = React.useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+    const [firstNameError, setFirstNameError] = React.useState(false);
+    const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
+    const [lastNameError, setLastNameError] = React.useState(false);
+    const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
 
     const validateInputs = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
+        const username = document.getElementById('username') as HTMLInputElement;
         const password = document.getElementById('password') as HTMLInputElement;
+        const email = document.getElementById('email') as HTMLInputElement;
+        const firstName = document.getElementById('firstName') as HTMLInputElement;
+        const lastName = document.getElementById('lastName') as HTMLInputElement;
 
         let isValid = true;
+
+        if (!username.value || username.value.length < 3) {
+            setUsernameError(true);
+            setUsernameErrorMessage('Username must be at least 3 characters long..');
+            isValid = false;
+        } else {
+            setUsernameError(false);
+            setUsernameErrorMessage('');
+        }
+
+        if (!password.value || password.value.length < 11) {
+            setPasswordError(true);
+            setPasswordErrorMessage('Password must be at least 11 characters long.');
+            isValid = false;
+        } else {
+            setPasswordError(false);
+            setPasswordErrorMessage('');
+        }
 
         if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
             setEmailError(true);
@@ -95,33 +118,31 @@ export default function Signup() {
             setEmailErrorMessage('');
         }
 
-        if (!password.value || password.value.length < 6) {
-            setPasswordError(true);
-            setPasswordErrorMessage('Password must be at least 6 characters long.');
+        if (!firstName.value || /\d/.test(firstName.value)) {
+            setFirstNameError(true);
+            setFirstNameErrorMessage('Please enter a valid first name.');
             isValid = false;
-        } else {
-            setPasswordError(false);
-            setPasswordErrorMessage('');
+        }
+
+        if (!lastName.value || /\d/.test(lastName.value)) {
+            setLastNameError(true);
+            setLastNameErrorMessage('Please enter a valid last name.');
         }
 
         return isValid;
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        if (emailError || passwordError) {
-            event.preventDefault();
-            return;
-        }
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        event.preventDefault();
 
         if (validateInputs()) {
-            mutation.mutate({email, password});
+            signup(credentials);
         }
     };
+
+    if (isAuthenticated) {
+        return <Navigate to={"/"} />;
+    }
 
     return (
 
@@ -140,18 +161,18 @@ export default function Signup() {
                     sx={{display: 'flex', flexDirection: 'column', gap: 2}}
                 >
                     <FormControl>
-                        <FormLabel htmlFor="email">Email</FormLabel>
+                        <FormLabel htmlFor="username">Username</FormLabel>
                         <TextField
                             required
                             fullWidth
-                            id="email"
-                            placeholder="your@email.com"
-                            name="email"
-                            autoComplete="email"
+                            id="username"
+                            placeholder="username"
+                            name="username"
+                            autoComplete="username"
                             variant="outlined"
-                            error={emailError}
-                            helperText={emailErrorMessage}
-                            onChange={e => setEmail(e.target.value)}
+                            error={usernameError}
+                            helperText={usernameErrorMessage}
+                            onChange={e => setCredentials({ ...credentials, username: e.target.value })}
                             color={passwordError ? 'error' : 'primary'}/>
                     </FormControl>
                     <FormControl>
@@ -167,8 +188,55 @@ export default function Signup() {
                             variant="outlined"
                             error={passwordError}
                             helperText={passwordErrorMessage}
-                            onChange={e => setPassword(e.target.value)}
+                            onChange={e => setCredentials({ ...credentials, password: e.target.value })}
                             color={passwordError ? 'error' : 'primary'}/>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel htmlFor="email">Email</FormLabel>
+                        <TextField
+                            required
+                            fullWidth
+                            name="email"
+                            placeholder="email"
+                            type="email"
+                            id="email"
+                            autoComplete="email"
+                            variant="outlined"
+                            error={emailError}
+                            helperText={emailErrorMessage}
+                            onChange={e => setCredentials({ ...credentials, email: e.target.value })}
+                            color={emailError ? 'error' : 'primary'}/>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel htmlFor="firstName">First Name</FormLabel>
+                        <TextField
+                            required
+                            fullWidth
+                            name="firstName"
+                            placeholder="first name"
+                            type="text"
+                            id="firstName"
+                            autoComplete="given-name"
+                            variant="outlined"
+                            error={firstNameError}
+                            helperText={firstNameErrorMessage}
+                            onChange={e => setCredentials({ ...credentials, firstName: e.target.value })}
+                            color={firstNameError ? 'error' : 'primary'}/>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel htmlFor="lastName">Last Name</FormLabel>
+                        <TextField
+                            required
+                            fullWidth
+                            name="lastName"
+                            placeholder="last name"
+                            type="text"
+                            id="lastName"
+                            autoComplete="family-name"
+                            error={lastNameError}
+                            helperText={lastNameErrorMessage}
+                            onChange={e => setCredentials({ ...credentials, lastName: e.target.value })}
+                            color={lastNameError ? 'error' : 'primary'}/>
                     </FormControl>
                     <Button
                         type="submit"
@@ -176,9 +244,16 @@ export default function Signup() {
                         variant="contained"
                         onClick={validateInputs}
                     >
-                        Sign up
+                        {isPending ? "Signing up..." : "Sign Up"}
                     </Button>
                 </Box>
+
+                {/*{isError && (*/}
+                {/*    <Alert severity="error">*/}
+                {/*        Registration failed. Please check your credentials.*/}
+                {/*    </Alert>*/}
+                {/*)}*/}
+
                 <Divider>
                     <Typography sx={{color: 'text.secondary'}}>or</Typography>
                 </Divider>
@@ -186,11 +261,11 @@ export default function Signup() {
                     <Typography sx={{textAlign: 'center'}}>
                         Already have an account?{' '}
                         <Link
-                            href="/Login"
+                            href="/login"
                             variant="body2"
                             sx={{alignSelf: 'center'}}
                         >
-                            Sign in
+                            Log in
                         </Link>
                     </Typography>
                 </Box>
