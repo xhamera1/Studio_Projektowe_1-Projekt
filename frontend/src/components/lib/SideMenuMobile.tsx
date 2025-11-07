@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
-import MenuContent from './MenuContent';
+import MenuContent from '../MenuContent.tsx';
 import CardAlert from './CardAlert';
 
 interface SideMenuMobileProps {

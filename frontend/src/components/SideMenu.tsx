@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import MenuContent from './lib/MenuContent';
+import MenuContent from './MenuContent.tsx';
 import OptionsMenu from './lib/OptionsMenu';
 
 import {useApplicationContext} from "../contexts/ApplicationContextProvider";
