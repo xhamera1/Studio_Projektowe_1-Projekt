@@ -4,7 +4,7 @@
 
 The primary goal of this project was to develop a robust machine learning model capable of predicting the likelihood of a **heart attack** based on key clinical and demographic indicators. Early prediction of heart disease risk is critical for preventative healthcare, enabling timely intervention and improved patient outcomes.
 
-The dataset used in this study was compiled from **four hospital-based datasets** sourced from the [UCI Machine Learning Repository: Heart Disease Dataset](https://archive.ics.uci.edu/dataset/45/heart+disease). These are real clinical data (not synthetic), manually merged to create a unified dataset for analysis and modeling.
+The dataset used in this study was compiled from **four hospital-based datasets** sourced from the [UCI Machine Learning Repository: Heart Disease Dataset (6/30/1988)](https://archive.ics.uci.edu/dataset/45/heart+disease) made by Andras Janosi, William Steinbrunn, Matthias Pfisterer, Robert Detrano. These are real clinical data (not synthetic), manually merged to create a unified dataset for analysis and modeling.
 
 ---
 
