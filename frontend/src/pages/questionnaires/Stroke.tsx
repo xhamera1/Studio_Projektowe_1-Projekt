@@ -12,8 +12,8 @@ const textInputList: { idx: number; id: string; label: string; min: number; max:
         idx: 1,
         id: "avg_glucose_level",
         label: "Average glucose level",
-        min: 0,
-        max: 1,
+        min: 50,
+        max: 250,
     },
     {
         idx: 2,
