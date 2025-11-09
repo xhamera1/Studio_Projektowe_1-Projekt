@@ -1,40 +1,37 @@
-import {type LoginRequest, useLogin} from "./useLogin.ts";
-import {type ChangeEvent, type FormEvent, useState} from "react";
+import { type LoginRequest, useLogin } from './useLogin.ts';
+import { type ChangeEvent, type FormEvent, useState } from 'react';
 
 export const useLoginForm = () => {
   const [credentials, setCredentials] = useState<LoginRequest>({
-    username: "",
-    password: "",
+    username: '',
+    password: ''
   });
   const [errors, setErrors] = useState({
-    username: "",
-    password: "",
+    username: '',
+    password: ''
   });
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const {
-    mutate: login,
-    isPending,
-  } = useLogin({
+  const { mutate: login, isPending } = useLogin({
     onSuccess: () => {
       setSubmitError(null);
     },
-    onError: (error) => {
+    onError: error => {
       setSubmitError(error.message);
-    },
+    }
   });
 
   const validate = () => {
     let isValid = true;
-    const newErrors = {username: "", password: ""};
+    const newErrors = { username: '', password: '' };
 
     if (!credentials.username || credentials.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters long.";
+      newErrors.username = 'Username must be at least 3 characters long.';
       isValid = false;
     }
 
     if (!credentials.password || credentials.password.length < 11) {
-      newErrors.password = "Password must be at least 11 characters long.";
+      newErrors.password = 'Password must be at least 11 characters long.';
       isValid = false;
     }
 
@@ -43,8 +40,8 @@ export const useLoginForm = () => {
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
-    setCredentials((prev: LoginRequest) => ({...prev, [name]: value}));
+    const { name, value } = event.target;
+    setCredentials((prev: LoginRequest) => ({ ...prev, [name]: value }));
     if (submitError) {
       setSubmitError(null);
     }
@@ -63,6 +60,6 @@ export const useLoginForm = () => {
     isPending,
     submitError,
     handleChange,
-    handleSubmit,
+    handleSubmit
   };
 };

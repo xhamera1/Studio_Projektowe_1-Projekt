@@ -9,7 +9,7 @@ export type User = {
   role: UserRole;
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
 export type JwtToken = {
   value: string;

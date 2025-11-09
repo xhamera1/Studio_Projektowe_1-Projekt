@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import {useLoginForm} from "../../hooks/useLoginForm.ts";
-import {Alert} from "@mui/material";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { useLoginForm } from '../../hooks/useLoginForm.ts';
+import { Alert } from '@mui/material';
 
 const LoginForm = () => {
   const {
@@ -11,7 +11,7 @@ const LoginForm = () => {
     isPending,
     submitError,
     handleChange,
-    handleSubmit,
+    handleSubmit
   } = useLoginForm();
 
   return (
@@ -20,10 +20,10 @@ const LoginForm = () => {
       onSubmit={handleSubmit}
       noValidate
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        gap: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        gap: 2
       }}
     >
       {submitError && <Alert severity="error">{submitError}</Alert>}
@@ -57,7 +57,7 @@ const LoginForm = () => {
         onChange={handleChange}
       />
       <Button type="submit" fullWidth variant="contained" disabled={isPending}>
-        {isPending ? "Logging in..." : "Log in"}
+        {isPending ? 'Logging in...' : 'Log in'}
       </Button>
     </Box>
   );

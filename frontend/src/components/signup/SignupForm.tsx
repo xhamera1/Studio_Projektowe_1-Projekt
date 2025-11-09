@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import {Alert} from "@mui/material";
-import {useSignupForm} from "../../hooks/useSignupForm.ts";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { Alert } from '@mui/material';
+import { useSignupForm } from '../../hooks/useSignupForm.ts';
 
 const SignupForm = () => {
   const {
@@ -11,7 +11,7 @@ const SignupForm = () => {
     isPending,
     submitError,
     handleChange,
-    handleSubmit,
+    handleSubmit
   } = useSignupForm();
 
   return (
@@ -20,10 +20,10 @@ const SignupForm = () => {
       onSubmit={handleSubmit}
       noValidate
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        gap: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        gap: 2
       }}
     >
       {submitError && <Alert severity="error">{submitError}</Alert>}
@@ -99,7 +99,7 @@ const SignupForm = () => {
         onChange={handleChange}
       />
       <Button type="submit" fullWidth variant="contained" disabled={isPending}>
-        {isPending ? "Signing up..." : "Sign Up"}
+        {isPending ? 'Signing up...' : 'Sign Up'}
       </Button>
     </Box>
   );

@@ -1,53 +1,49 @@
-import {Link as RouterLink, Navigate} from "react-router-dom";
-import CssBaseline from "@mui/material/CssBaseline";
-import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
-import useAuthenticationContext from "../contexts/AuthenticationContextProvider.tsx";
-import LoginForm from "../components/login/LoginForm.tsx";
-import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
+import { Link as RouterLink, Navigate } from 'react-router-dom';
+import CssBaseline from '@mui/material/CssBaseline';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
+import LoginForm from '../components/login/LoginForm.tsx';
+import Container from '@mui/material/Container';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 export default function Login() {
-  const {isAuthenticated} = useAuthenticationContext();
+  const { isAuthenticated } = useAuthenticationContext();
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace/>;
+    return <Navigate to="/" replace />;
   }
 
   return (
     <>
-      <CssBaseline enableColorScheme/>
+      <CssBaseline enableColorScheme />
       <Container
         component="main"
         maxWidth="xs"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          minHeight: "100vh",
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          minHeight: '100vh'
         }}
       >
         <Card variant="outlined">
           <CardContent
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2
             }}
           >
             <Typography component="h1" variant="h4">
               Log in
             </Typography>
-            <LoginForm/>
-            <Typography sx={{textAlign: "center"}}>
-              Don't have an account?{" "}
-              <Link
-                component={RouterLink}
-                to="/signup"
-                variant="body2"
-              >
+            <LoginForm />
+            <Typography sx={{ textAlign: 'center' }}>
+              Don't have an account?{' '}
+              <Link component={RouterLink} to="/signup" variant="body2">
                 Sign up
               </Link>
             </Typography>

@@ -1,5 +1,5 @@
-import {type ChangeEvent, type FormEvent, useState} from "react";
-import {type SignupRequest, useSignup} from "./useSignup.ts";
+import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { type SignupRequest, useSignup } from './useSignup.ts';
 
 export const useSignupForm = () => {
   const [credentials, setCredentials] = useState<SignupRequest>({
@@ -7,43 +7,43 @@ export const useSignupForm = () => {
     password: '',
     email: '',
     firstName: '',
-    lastName: '',
+    lastName: ''
   });
   const [errors, setErrors] = useState({
-    username: "",
-    password: "",
-    email: "",
-    firstName: "",
-    lastName: "",
+    username: '',
+    password: '',
+    email: '',
+    firstName: '',
+    lastName: ''
   });
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const {mutate: signup, isPending} = useSignup({
+  const { mutate: signup, isPending } = useSignup({
     onSuccess: () => {
       setSubmitError(null);
     },
-    onError: (error) => {
+    onError: error => {
       setSubmitError(error.message);
-    },
+    }
   });
 
   const validate = () => {
     let isValid = true;
     const newErrors = {
-      username: "",
-      password: "",
-      email: "",
-      firstName: "",
-      lastName: "",
+      username: '',
+      password: '',
+      email: '',
+      firstName: '',
+      lastName: ''
     };
 
     if (!credentials.username || credentials.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters long.";
+      newErrors.username = 'Username must be at least 3 characters long.';
       isValid = false;
     }
 
     if (!credentials.password || credentials.password.length < 11) {
-      newErrors.password = "Password must be at least 11 characters long.";
+      newErrors.password = 'Password must be at least 11 characters long.';
       isValid = false;
     }
 
@@ -67,8 +67,8 @@ export const useSignupForm = () => {
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
-    setCredentials((prev: SignupRequest) => ({...prev, [name]: value}));
+    const { name, value } = event.target;
+    setCredentials((prev: SignupRequest) => ({ ...prev, [name]: value }));
     if (submitError) {
       setSubmitError(null);
     }
@@ -87,6 +87,6 @@ export const useSignupForm = () => {
     isPending,
     submitError,
     handleChange,
-    handleSubmit,
+    handleSubmit
   };
 };
