@@ -3,13 +3,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/health-app-db
-    username: dev-user
-    password: dev-password
+    url: jdbc:postgresql://localhost:5432/health-app-db
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
   flyway:
     enabled: true

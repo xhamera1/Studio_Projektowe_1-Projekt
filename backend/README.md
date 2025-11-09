@@ -35,7 +35,7 @@ Prerequisites: Docker Desktop installed and running.
 Start the database (from repository root):
 
 ```bash
-docker compose up -d postgres
+docker compose up -d
 ```
 
 Stop/clean up:

@@ -1,8 +1,7 @@
-.vscode/
-.idea
+# JetBrains IDEs
+.idea/
+*.iml
+
+# MacOS
 .DS_Store
-node_modules/
-dist/
-.env
-.env.local
-.env.*.local
+**/.DS_Store
