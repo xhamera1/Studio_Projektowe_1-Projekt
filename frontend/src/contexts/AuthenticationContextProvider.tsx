@@ -1,6 +1,6 @@
-import {createContext, type ReactNode, useContext} from "react";
-import {useLocalStorage} from "usehooks-ts";
-import type {JwtToken} from "../utils/types.ts";
+import { createContext, type ReactNode, useContext } from 'react';
+import { useLocalStorage } from 'usehooks-ts';
+import type { JwtToken } from '../utils/types.ts';
 
 type AuthenticationContextType = {
   getTokenValue: () => string | null;
@@ -18,18 +18,18 @@ export type AuthenticationToken = {
   expiryTime: number;
 };
 
-const AUTHENTICATION_TOKEN_KEY = "authenticationToken";
+const AUTHENTICATION_TOKEN_KEY = 'authenticationToken';
 
 type AuthenticationContextProviderProps = {
   children: ReactNode;
 };
 
 export const AuthenticationContextProvider = ({
-                                                children,
-                                              }: AuthenticationContextProviderProps) => {
+  children
+}: AuthenticationContextProviderProps) => {
   const [token, setToken] = useLocalStorage<AuthenticationToken | null>(
     AUTHENTICATION_TOKEN_KEY,
-    null,
+    null
   );
   const isAuthenticated = token != null && Date.now() < token.expiryTime;
 
@@ -44,7 +44,7 @@ export const AuthenticationContextProvider = ({
     const expiryTime = Date.now() + jwtToken.expiresIn * 1000;
     setToken({
       value: jwtToken.value,
-      expiryTime,
+      expiryTime
     });
   };
 
@@ -58,7 +58,7 @@ export const AuthenticationContextProvider = ({
         getTokenValue,
         isAuthenticated,
         saveAuthentication,
-        clearAuthentication,
+        clearAuthentication
       }}
     >
       {children}
@@ -66,13 +66,14 @@ export const AuthenticationContextProvider = ({
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuthenticationContext = () => {
   const context = useContext(AuthenticationContext);
   if (context === undefined) {
     throw new Error(
-      "useAuthenticationContext must be used within an AuthenticationContextProvider",
+      'useAuthenticationContext must be used within an AuthenticationContextProvider'
     );
   }
   return context;
 };
+
+export default useAuthenticationContext;

@@ -1,6 +1,6 @@
-import {createContext, type ReactNode, useContext} from "react";
-import {useLocalStorage} from "usehooks-ts";
-import type {User} from "../utils/types.ts";
+import { createContext, type ReactNode, useContext } from 'react';
+import { useLocalStorage } from 'usehooks-ts';
+import type { User } from '../utils/types.ts';
 
 type ApplicationContextType = {
   user: User | null;
@@ -8,20 +8,22 @@ type ApplicationContextType = {
 };
 
 const ApplicationContext = createContext<ApplicationContextType | undefined>(
-  undefined,
+  undefined
 );
 
-const USER_KEY = "currentUser";
+const USER_KEY = 'currentUser';
 
 type ApplicationContextProviderProps = {
   children: ReactNode;
 };
 
-export const ApplicationContextProvider = ({children}: ApplicationContextProviderProps) => {
+export const ApplicationContextProvider = ({
+  children
+}: ApplicationContextProviderProps) => {
   const [user, setUser] = useLocalStorage<User | null>(USER_KEY, null);
 
   return (
-    <ApplicationContext.Provider value={{user, setUser}}>
+    <ApplicationContext.Provider value={{ user, setUser }}>
       {children}
     </ApplicationContext.Provider>
   );
@@ -31,7 +33,7 @@ export const useApplicationContext = () => {
   const context = useContext(ApplicationContext);
   if (context === undefined) {
     throw new Error(
-      "useApplicationContext must be used within an ApplicationContextProvider",
+      'useApplicationContext must be used within an ApplicationContextProvider'
     );
   }
   return context;

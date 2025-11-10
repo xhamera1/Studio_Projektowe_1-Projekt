@@ -1,6 +1,7 @@
 # Health Prediction Frontend
 
-A React application for health prediction services built with TypeScript and Vite.
+A React application for health prediction services built with TypeScript and
+Vite.
 
 ## Prerequisites
 
@@ -31,29 +32,18 @@ VITE_ENV=production
 VITE_ENABLE_DEBUG=false
 ```
 
-Replace `https://api.yourdomain.com` with your actual production API URL.
-
-### Local Overrides (Optional)
-
-For developer-specific settings, create a `.env.local` file:
-
-```env
-VITE_API_BASE_URL=http://localhost:8080
-```
-
-**Note:** `.env.local` overrides other environment files and is not committed to git.
-
 ## Available Scripts
 
-| Script               | Description              |
-|----------------------|--------------------------|
-| `npm install`        | Install dependencies     |
-| `npm run dev`        | Start development server |
-| `npm run build`      | Build for production     |
-| `npm run build:dev`  | Build for development    |
-| `npm run build:prod` | Build for production     |
-| `npm run preview`    | Preview production build |
-| `npm run lint`       | Run ESLint               |
+| Script               | Description               |
+|----------------------|---------------------------|
+| `npm install`        | Install dependencies      |
+| `npm run dev`        | Start development server  |
+| `npm run build`      | Build for production      |
+| `npm run build:dev`  | Build for development     |
+| `npm run build:prod` | Build for production      |
+| `npm run preview`    | Preview production build  |
+| `npm run lint`       | Run ESLint                |
+| `npm run format`     | Format code with Prettier |
 
 ## Project Structure
 

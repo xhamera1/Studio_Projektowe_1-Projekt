@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.healthapp.backend.dto.authentication.LoginResponse.createLoginResponseFor;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -32,6 +33,6 @@ public class AuthenticationController {
         log.info("Received login request for user: {}", request.username());
         User authenticatedUser = authenticationService.authenticate(request);
         JwtToken token = jwtService.generateToken(authenticatedUser);
-        return LoginResponse.createLoginResponseFor(authenticatedUser, token);
+        return createLoginResponseFor(authenticatedUser, token);
     }
 }
