@@ -12,6 +12,7 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import {Link} from "react-router-dom";
+import Divider from "@mui/material/Divider";
 
 const mainListItems = [
     {text: 'Home', icon: <HomeRoundedIcon/>, link: "/"},
@@ -33,14 +34,14 @@ export default function MenuContent() {
         <Stack sx={{flexGrow: 1, p: 1, justifyContent: 'space-between'}}>
             <List dense>
                 {mainListItems.map((item, index) => (
-                    <ListItem key={index} disablePadding sx={{display: 'block'}}>
+                    <><ListItem key={index} disablePadding sx={{display: 'block'}}>
                         <Link to={item.link}>
                             <ListItemButton selected={index === 0}>
                                 <ListItemIcon>{item.icon}</ListItemIcon>
                                 <ListItemText primary={item.text}/>
                             </ListItemButton>
                         </Link>
-                    </ListItem>
+                    </ListItem><Divider/></>
                 ))}
             </List>
             <List dense>
