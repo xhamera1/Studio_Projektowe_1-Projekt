@@ -2,9 +2,8 @@ import ListItem from "@mui/material/ListItem";
 import {Link} from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import SideMenu from "../../components/SideMenu.tsx";
+import SideMenu from "../../components/sidebar/SideMenu.tsx";
 import Container from "../../components/Container.tsx";
-import NavBar from "../../components/NavBar.tsx";
 import Divider from "@mui/material/Divider";
 
 const questionnaires = [
@@ -16,7 +15,6 @@ const questionnaires = [
 
 const Questionnaires = () => {
     return <>
-        <NavBar/>
         <SideMenu/>
         <Container>
         <h1>Make Prediction Page</h1>

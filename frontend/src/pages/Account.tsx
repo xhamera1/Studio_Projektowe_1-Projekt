@@ -1,15 +1,16 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import NavBar from "../components/NavBar.tsx";
 import {Avatar} from "@mui/material";
 import Card from "../components/Card.tsx"
 import Divider from "@mui/material/Divider";
 import {useApplicationContext} from "../contexts/ApplicationContextProvider.tsx";
 import {useAuthenticationContext} from "../contexts/AuthenticationContextProvider.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {authenticationService} from "../services/authentificationService.ts";
+import {authenticationService} from "../services/authenticationService.ts";
 import Box from "@mui/material/Box";
-import SideMenu from "../components/SideMenu.tsx";
+import SideMenu from "../components/sidebar/SideMenu.tsx";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 /* Parse a JWT without extra deps: split and base64-decode the payload to read claims.
    This is used to extract the username from the token when needed. */
@@ -30,73 +31,6 @@ function parseJwtPayload(token: string) {
 }
 
 
-// const Account = () => {
-//     const {user} = useApplicationContext();
-//     const {getTokenValue} = useAuthenticationContext();
-//
-//     // If we already have a user in application context (saved after login), show it.
-//     // Otherwise, try to fetch by username extracted from JWT.
-//     const token = getTokenValue();
-//     const usernameFromToken = token ? (parseJwtPayload(token)?.sub || parseJwtPayload(token)?.username) : null;
-//
-//     const {data: fetchedUser, isLoading, isError} = useQuery(
-//         ['user', usernameFromToken],
-//         () => authenticationService.getUser(usernameFromToken as string, token || undefined),
-//         {
-//             enabled: !user && !!usernameFromToken,
-//             retry: false,
-//         }
-//     );
-//
-//     const displayUser = user || fetchedUser;
-//
-//     return (
-//         <><NavBar/><Stack spacing={8}>
-//             <div>
-//                 <Typography variant="h4">Account</Typography>
-//             </div>
-//             <Grid container spacing={3}>
-//                 <Grid
-//                     size={{
-//                         lg: 4,
-//                         md: 6,
-//                         xs: 12,
-//                     }}
-//                 >
-//                     <Card>
-//                         <CardContent>
-//                             <Stack spacing={2} sx={{alignItems: 'center'}}>
-//                                 <div>
-//                                     <Avatar src={displayUser?.avatar || '../assets/avatar.png'}
-//                                             sx={{height: '80px', width: '80px'}}/>
-//                                 </div>
-//                                 <Stack spacing={2} sx={{textAlign: 'center'}}>
-//                                     <Typography color="text.secondary"
-//                                                 variant="body2">{displayUser.username}</Typography>
-//                                     <Typography
-//                                         variant="h5">{displayUser ? `${displayUser.firstName} ${displayUser.lastName}` : (isLoading ? 'Loading...' : 'Unknown user')}</Typography>
-//                                     <Typography color="text.secondary" variant="body2">{displayUser.email}</Typography>
-//                                 </Stack>
-//                             </Stack>
-//                         </CardContent>
-//                         <Divider/>
-//                     </Card>
-//                 </Grid>
-//                 <Grid
-//                     size={{
-//                         lg: 8,
-//                         md: 6,
-//                         xs: 12,
-//                     }}
-//                 >
-//                     {/* Account details / edit form could go here */}
-//                 </Grid>
-//             </Grid>
-//             {isError && <Typography color="error">Failed to load account details.</Typography>}
-//         </Stack></>
-//     );
-// }
-
 const Account = () => {
     const {user} = useApplicationContext();
     const {getTokenValue} = useAuthenticationContext();
@@ -106,7 +40,7 @@ const Account = () => {
     const token = getTokenValue();
     const usernameFromToken = token ? (parseJwtPayload(token)?.sub || parseJwtPayload(token)?.username) : null;
 
-    const {data: fetchedUser, isLoading, isError} = useQuery(
+    const {data: fetchedUser, isError} = useQuery(
         ['user', usernameFromToken],
         () => authenticationService.getUser(usernameFromToken as string, token || undefined),
         {
@@ -118,31 +52,65 @@ const Account = () => {
     const displayUser = user || fetchedUser;
 
     return (
-        <><NavBar/><Card variant="outlined" sx={{maxWidth: 360}}>
+        <><Card variant="outlined" sx={{maxWidth: 360}}>
             <SideMenu/>
             <Box sx={{p: 2}}>
                 <Stack
                     direction="column"
-                    sx={{justifyContent: 'space-between', alignItems: 'center'}}
+                    sx={{justifyContent: 'space-between', alignItems: 'center', gap: '1rem'}}
                 >
                     <div>
                         <Avatar src={displayUser?.avatar || '../assets/avatar.png'}
                                 sx={{height: '80px', width: '80px'}}/>
                     </div>
+                    <Button variant={"outlined"}>Change avatar</Button>
                     <Typography gutterBottom variant="h4" component="div">
                         {displayUser.username}
                     </Typography>
 
-                    <Typography
-                        variant="h5">{displayUser ? `${displayUser.firstName} ${displayUser.lastName}` : (isLoading ? 'Loading...' : 'Unknown user')}</Typography>
-                    <Typography color="text.secondary" variant="body2">{displayUser.email}</Typography>
+                    <TextField
+                        id="outlined-read-only-input"
+                        label="First name"
+                        defaultValue={displayUser.firstName}
+                        slotProps={{
+                            input: {
+                                readOnly: true,
+                            },
+                        }}
+                    />
+                    <TextField
+                        id="outlined-read-only-input"
+                        label="Last name"
+                        defaultValue={displayUser.lastName}
+                        slotProps={{
+                            input: {
+                                readOnly: true,
+                            },
+                        }}
+                    />
+                    <TextField
+                        id="outlined-read-only-input"
+                        label="Email"
+                        defaultValue={displayUser.email}
+                        slotProps={{
+                            input: {
+                                readOnly: true,
+                            },
+                        }}
+                    />
                 </Stack>
             </Box>
             <Divider/>
             <Box sx={{p: 2}}>
-                <Typography gutterBottom variant="body2">
-                    More data here in the future
-                </Typography>
+                <Stack
+                    direction="column"
+                    sx={{justifyContent: 'space-between', alignItems: 'center', gap: '1rem'}}
+                >
+                    <Typography gutterBottom variant="body2">
+                        More data here in the future
+                    </Typography>
+                    <Button variant={"outlined"}>Delete account</Button>
+                </Stack>
             </Box>
             {isError && <Typography color="error">Failed to load account details.</Typography>}
         </Card></>
