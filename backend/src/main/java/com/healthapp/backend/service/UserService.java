@@ -28,12 +28,19 @@ public class UserService {
                 .orElseThrow(() -> userNotFoundException(username));
     }
 
+    @Transactional(readOnly = true)
+    public User getUserBy(Long userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> userNotFoundException(userId));
+    }
+
     public User createUser(SignupRequest request) {
         if (userRepository.existsByUsernameOrEmail(request.username(), request.email())) {
             throw userAlreadyExistsException();
         }
 
-        User user = User.builder()
+        var user = User.builder()
                 .username(request.username())
                 .email(request.email())
                 .firstName(request.firstName())
@@ -45,18 +52,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(String username, UserEditRequest request) {
-        User user = getUserBy(username);
-
-        request.email().ifPresent(user::setEmail);
-        request.firstName().ifPresent(user::setFirstName);
-        request.lastName().ifPresent(user::setLastName);
+    public User updateUser(Long userId, UserEditRequest request) {
+        var user = getUserBy(userId);
+        user.setEmail(request.email());
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
 
         return userRepository.save(user);
     }
 
-    public void deleteUser(String username) {
-        User user = getUserBy(username);
+    public void deleteUser(Long userId) {
+        var user = getUserBy(userId);
         userRepository.delete(user);
     }
 }

@@ -1,5 +1,6 @@
 package com.healthapp.backend.controller;
 
+import com.healthapp.backend.annotation.IsOwnerOrAdmin;
 import com.healthapp.backend.dto.user.SignupRequest;
 import com.healthapp.backend.dto.user.UserEditRequest;
 import com.healthapp.backend.dto.user.UserResponse;
@@ -7,7 +8,6 @@ import com.healthapp.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,25 +36,26 @@ public class UserController {
         return createUserResponseFrom(user);
     }
 
-    @GetMapping(value = "/{username}", produces = APPLICATION_JSON)
-    public UserResponse getUser(@PathVariable String username) {
-        log.info("Received get user request with username: {}", username);
-        var user = userService.getUserBy(username);
+    @GetMapping(value = "/{userId}", produces = APPLICATION_JSON)
+    @IsOwnerOrAdmin
+    public UserResponse getUser(@PathVariable Long userId) {
+        log.info("Received get user request with ID: {}", userId);
+        var user = userService.getUserBy(userId);
         return createUserResponseFrom(user);
     }
 
-    @PutMapping(value = "/{username}", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    @PreAuthorize("@userSecurityService.isOwnerOrAdmin(#username, authentication)")
-    public UserResponse updateUser(@PathVariable String username, @RequestBody @Valid UserEditRequest request) {
-        log.info("Received update user request with username: {}", username);
-        var updatedUser = userService.updateUser(username, request);
+    @PutMapping(value = "/{userId}", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    @IsOwnerOrAdmin
+    public UserResponse updateUser(@PathVariable Long userId, @RequestBody @Valid UserEditRequest request) {
+        log.info("Received update user request with ID: {}", userId);
+        var updatedUser = userService.updateUser(userId, request);
         return createUserResponseFrom(updatedUser);
     }
 
-    @DeleteMapping(value = "/{username}", produces = APPLICATION_JSON)
-    @PreAuthorize("@userSecurityService.isOwnerOrAdmin(#username, authentication)")
-    public void deleteUser(@PathVariable String username) {
-        log.info("Received delete user request with username: {}", username);
-        userService.deleteUser(username);
+    @DeleteMapping(value = "/{userId}", produces = APPLICATION_JSON)
+    @IsOwnerOrAdmin
+    public void deleteUser(@PathVariable Long userId) {
+        log.info("Received delete user request with ID: {}", userId);
+        userService.deleteUser(userId);
     }
 }

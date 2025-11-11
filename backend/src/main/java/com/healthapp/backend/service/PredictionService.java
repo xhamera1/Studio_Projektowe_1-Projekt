@@ -4,6 +4,7 @@ import com.healthapp.backend.client.HealthPredictionClient;
 import com.healthapp.backend.dto.prediction.DiabetesPredictionRequest;
 import com.healthapp.backend.dto.prediction.HeartAttackPredictionRequest;
 import com.healthapp.backend.dto.prediction.PredictionResponse;
+import com.healthapp.backend.dto.prediction.StrokePredictionRequest;
 import com.healthapp.backend.repository.DiabetesRepository;
 import com.healthapp.backend.repository.HeartAttackRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,10 @@ public class PredictionService {
     private final UserService userService;
     private final Gemini gemini;
 
-    public PredictionResponse predictDiabetesFor(DiabetesPredictionRequest request, String username) {
+    public PredictionResponse predictDiabetesFor(DiabetesPredictionRequest request, Long userId) {
         var prediction = healthPredictionClient.predictDiabetes(request);
 
-        var user = userService.getUserBy(username);
+        var user = userService.getUserBy(userId);
 
         var recommendations = gemini.chat(createDiabetesPromptFrom(request, prediction));
 
@@ -37,10 +38,10 @@ public class PredictionService {
         return new PredictionResponse(prediction.probability(), recommendations);
     }
 
-    public PredictionResponse predictHeartAttackFor(HeartAttackPredictionRequest request, String username) {
+    public PredictionResponse predictHeartAttackFor(HeartAttackPredictionRequest request, Long userId) {
         var prediction = healthPredictionClient.predictHeartAttack(request);
 
-        var user = userService.getUserBy(username);
+        var user = userService.getUserBy(userId);
 
         var recommendations = gemini.chat(createHeartAttackPromptFrom(request, prediction));
 
@@ -48,5 +49,9 @@ public class PredictionService {
         heartAttackRepository.save(HeartAttackData);
 
         return new PredictionResponse(prediction.probability(), recommendations);
+    }
+
+    public PredictionResponse predictStrokeFor(StrokePredictionRequest request, Long userId) {
+        return new PredictionResponse(0.0f, "Stroke prediction recommendations");
     }
 }

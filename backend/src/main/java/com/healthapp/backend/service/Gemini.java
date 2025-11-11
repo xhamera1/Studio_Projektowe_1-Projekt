@@ -39,8 +39,7 @@ public class Gemini {
             log.warn("Response blocked due to safety settings");
             throw geminiSafetyBlockException();
         }
-
-        log.info("Received response from LLM: {}", response);
+        
         return response.text();
     }
 

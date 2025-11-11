@@ -1,5 +1,6 @@
 package com.healthapp.backend.service;
 
+import com.healthapp.backend.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserSecurityService {
 
-    public boolean isOwnerOrAdmin(String username, Authentication authentication) {
+    public boolean isOwnerOrAdmin(Long userId, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
@@ -20,7 +21,10 @@ public class UserSecurityService {
             return true;
         }
 
-        String currentUsername = authentication.getName();
-        return username.equals(currentUsername);
+        var principal = authentication.getPrincipal();
+        if (principal instanceof User user) {
+            return userId.equals(user.getId());
+        }
+        return false;
     }
 }
