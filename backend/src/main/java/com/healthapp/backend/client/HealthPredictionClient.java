@@ -4,6 +4,7 @@ import com.healthapp.backend.config.HealthPredictionClientConfig;
 import com.healthapp.backend.dto.prediction.DiabetesPredictionRequest;
 import com.healthapp.backend.dto.prediction.HealthPredictionServiceResponse;
 import com.healthapp.backend.dto.prediction.HeartAttackPredictionRequest;
+import com.healthapp.backend.dto.prediction.StrokePredictionRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,4 +17,7 @@ public interface HealthPredictionClient {
 
     @PostMapping("/api/models/heart-attack/predict")
     HealthPredictionServiceResponse predictHeartAttack(@RequestBody HeartAttackPredictionRequest request);
+
+    @PostMapping("/api/models/stroke/predict")
+    HealthPredictionServiceResponse predictStroke(@RequestBody StrokePredictionRequest request);
 }

@@ -20,14 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Transactional(readOnly = true)
-    public User getUserBy(String username) {
-        return userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> userNotFoundException(username));
-    }
-
+    
     @Transactional(readOnly = true)
     public User getUserBy(Long userId) {
         return userRepository

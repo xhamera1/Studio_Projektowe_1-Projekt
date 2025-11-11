@@ -57,7 +57,7 @@ public class DiabetesData {
 
     @Lob
     @Column(name = "llm_recommendation", columnDefinition = "TEXT")
-    private String recommendation;
+    private String recommendations;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -67,7 +67,12 @@ public class DiabetesData {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public static DiabetesData createDiabetesDataFrom(DiabetesPredictionRequest request, HealthPredictionServiceResponse prediction, User user, String recommendation) {
+    public static DiabetesData createDiabetesDataFrom(
+            DiabetesPredictionRequest request,
+            HealthPredictionServiceResponse prediction,
+            User user,
+            String recommendation
+    ) {
         return DiabetesData.builder()
                 .user(user)
                 .hba1cLevel(request.hba1cLevel())
@@ -76,7 +81,7 @@ public class DiabetesData {
                 .age(request.age())
                 .smokingHistory(request.smokingHistory())
                 .predictionProbability(prediction.probability())
-                .recommendation(recommendation)
+                .recommendations(recommendation)
                 .build();
     }
 }
