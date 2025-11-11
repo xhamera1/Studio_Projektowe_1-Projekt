@@ -10,6 +10,7 @@ import com.healthapp.backend.repository.HeartAttackRepository;
 import com.healthapp.backend.repository.StrokeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.healthapp.backend.dto.prediction.Prompt.createDiabetesPromptFrom;
 import static com.healthapp.backend.dto.prediction.Prompt.createHeartAttackPromptFrom;
@@ -29,10 +30,11 @@ public class PredictionService {
     private final UserService userService;
     private final Gemini gemini;
 
+    @Transactional
     public PredictionResponse predictDiabetesFor(DiabetesPredictionRequest request, Long userId) {
         var prediction = healthPredictionClient.predictDiabetes(request);
 
-        var user = userService.getUserBy(userId);
+        var user = userService.findUserBy(userId);
 
         var recommendations = gemini.chat(createDiabetesPromptFrom(request, prediction));
 
@@ -42,10 +44,11 @@ public class PredictionService {
         return new PredictionResponse(prediction.probability(), recommendations);
     }
 
+    @Transactional
     public PredictionResponse predictHeartAttackFor(HeartAttackPredictionRequest request, Long userId) {
         var prediction = healthPredictionClient.predictHeartAttack(request);
 
-        var user = userService.getUserBy(userId);
+        var user = userService.findUserBy(userId);
 
         var recommendations = gemini.chat(createHeartAttackPromptFrom(request, prediction));
 
@@ -55,10 +58,11 @@ public class PredictionService {
         return new PredictionResponse(prediction.probability(), recommendations);
     }
 
+    @Transactional
     public PredictionResponse predictStrokeFor(StrokePredictionRequest request, Long userId) {
         var prediction = healthPredictionClient.predictStroke(request);
 
-        var user = userService.getUserBy(userId);
+        var user = userService.findUserBy(userId);
 
         var recommendations = gemini.chat(createStrokePromptFrom(request, prediction));
 

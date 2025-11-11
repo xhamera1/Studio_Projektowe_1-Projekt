@@ -1,4 +1,4 @@
-package com.healthapp.backend.dto.predictionhistory;
+package com.healthapp.backend.dto.predictionHistory;
 
 import java.util.List;
 

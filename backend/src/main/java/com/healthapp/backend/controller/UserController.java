@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.healthapp.backend.dto.user.UserResponse.createUserResponseFrom;
 import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -32,24 +31,21 @@ public class UserController {
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public UserResponse signup(@RequestBody @Valid SignupRequest request) {
         log.info("Received create user request: {}", request);
-        var user = userService.createUser(request);
-        return createUserResponseFrom(user);
+        return userService.createUser(request);
     }
 
     @GetMapping(value = "/{userId}", produces = APPLICATION_JSON)
     @IsOwnerOrAdmin
     public UserResponse getUser(@PathVariable Long userId) {
         log.info("Received get user request with ID: {}", userId);
-        var user = userService.getUserBy(userId);
-        return createUserResponseFrom(user);
+        return userService.getUserBy(userId);
     }
 
     @PutMapping(value = "/{userId}", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     @IsOwnerOrAdmin
     public UserResponse updateUser(@PathVariable Long userId, @RequestBody @Valid UserEditRequest request) {
         log.info("Received update user request with ID: {}", userId);
-        var updatedUser = userService.updateUser(userId, request);
-        return createUserResponseFrom(updatedUser);
+        return userService.updateUser(userId, request);
     }
 
     @DeleteMapping(value = "/{userId}", produces = APPLICATION_JSON)

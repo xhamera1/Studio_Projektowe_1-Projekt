@@ -1,9 +1,9 @@
 package com.healthapp.backend.service;
 
-import com.healthapp.backend.dto.predictionhistory.DiabetesPredictionHistoryDto;
-import com.healthapp.backend.dto.predictionhistory.HeartAttackPredictionHistoryDto;
-import com.healthapp.backend.dto.predictionhistory.PredictionHistoryResponse;
-import com.healthapp.backend.dto.predictionhistory.StrokePredictionHistoryDto;
+import com.healthapp.backend.dto.predictionHistory.DiabetesPredictionHistoryDto;
+import com.healthapp.backend.dto.predictionHistory.HeartAttackPredictionHistoryDto;
+import com.healthapp.backend.dto.predictionHistory.PredictionHistoryResponse;
+import com.healthapp.backend.dto.predictionHistory.StrokePredictionHistoryDto;
 import com.healthapp.backend.repository.DiabetesRepository;
 import com.healthapp.backend.repository.HeartAttackRepository;
 import com.healthapp.backend.repository.StrokeRepository;

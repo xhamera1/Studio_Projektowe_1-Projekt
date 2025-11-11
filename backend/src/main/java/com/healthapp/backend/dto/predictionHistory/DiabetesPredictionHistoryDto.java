@@ -1,4 +1,4 @@
-package com.healthapp.backend.dto.predictionhistory;
+package com.healthapp.backend.dto.predictionHistory;
 
 import com.healthapp.backend.model.DiabetesData;
 import lombok.Builder;

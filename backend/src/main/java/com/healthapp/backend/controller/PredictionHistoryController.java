@@ -1,7 +1,7 @@
 package com.healthapp.backend.controller;
 
 import com.healthapp.backend.annotation.IsOwnerOrAdmin;
-import com.healthapp.backend.dto.predictionhistory.PredictionHistoryResponse;
+import com.healthapp.backend.dto.predictionHistory.PredictionHistoryResponse;
 import com.healthapp.backend.service.PredictionHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

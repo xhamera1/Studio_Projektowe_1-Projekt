@@ -1,5 +1,6 @@
 package com.healthapp.backend.model;
 
+import com.healthapp.backend.dto.user.SignupRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -71,5 +72,17 @@ public class User implements UserDetails {
     public enum Role {
         USER,
         ADMIN
+    }
+
+    public static User createUserFrom(SignupRequest request, String encodedPassword) {
+        return User.builder()
+                .username(request.username())
+                .email(request.email())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .password(encodedPassword)
+                .role(Role.USER)
+                .build();
+
     }
 }

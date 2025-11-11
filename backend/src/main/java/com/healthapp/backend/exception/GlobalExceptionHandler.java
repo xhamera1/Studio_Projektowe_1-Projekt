@@ -29,6 +29,27 @@ import static org.springframework.http.ProblemDetail.forStatusAndDetail;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UserDemographicAlreadyExistsException.class)
+    public ProblemDetail handleUserDemographicAlreadyExistsException(UserDemographicAlreadyExistsException ex) {
+        var problemDetail = forStatusAndDetail(CONFLICT, ex.getMessage());
+        problemDetail.setTitle("User Demographic Data Already Exists");
+        problemDetail.setProperty("timestamp", now());
+
+        log.warn("User demographic data already exists: {}", ex.getMessage());
+        return problemDetail;
+    }
+
+
+    @ExceptionHandler(UserDemographicDataNotFoundException.class)
+    public ProblemDetail handleUserDemographicDataNotFoundException(UserDemographicDataNotFoundException ex) {
+        var problemDetail = forStatusAndDetail(NOT_FOUND, ex.getMessage());
+        problemDetail.setTitle("User Demographic Data Not Found");
+        problemDetail.setProperty("timestamp", now());
+
+        log.warn("User demographic data not found: {}", ex.getMessage());
+        return problemDetail;
+    }
+
     @ExceptionHandler(GeminiException.class)
     public ProblemDetail handleGeminiException(GeminiException ex) {
         var problemDetail = forStatusAndDetail(INTERNAL_SERVER_ERROR, ex.getMessage());
