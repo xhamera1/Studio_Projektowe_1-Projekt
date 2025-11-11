@@ -1,5 +1,7 @@
 package com.healthapp.backend.dto.prediction;
 
+import static java.lang.String.format;
+
 public class Prompt {
 
     private static final String DIABETES_PROMPT_TEMPLATE = """
@@ -39,6 +41,24 @@ public class Prompt {
             Your response should be empathetic and encouraging.
             """;
 
+    private static final String STROKE_PROMPT_TEMPLATE = """
+            Analyze the following health data for a patient and provide personalized recommendations.
+            The patient has a %.2f%% probability of having a stroke, and the prediction is that the patient %s a stroke.
+            
+            Patient's data:
+            - Age: %d
+            - Sex: %d
+            - Hypertension: %b
+            - Heart Disease: %b
+            - Work Type: %s
+            - Average Glucose Level in blood: %d
+            - BMI: %.2f
+            
+            Based on this information, provide a set of actionable recommendations for the patient.
+            Focus on lifestyle changes, diet, and exercise.
+            If the probability of a stroke is high, strongly recommend consulting a healthcare professional.
+            Your response should be empathetic and encouraging.
+            """;
 
     public static String createHeartAttackPromptFrom(HeartAttackPredictionRequest request, HealthPredictionServiceResponse prediction) {
         String chestPainType = switch (request.cp()) {
@@ -49,7 +69,7 @@ public class Prompt {
             default -> "unknown type";
         };
 
-        return String.format(HEART_ATTACK_PROMPT_TEMPLATE,
+        return format(HEART_ATTACK_PROMPT_TEMPLATE,
                 prediction.probability() * 100,
                 prediction.hasDisease() ? "will have" : "will not have",
                 request.age(),
@@ -73,7 +93,7 @@ public class Prompt {
             default -> "not current";
         };
 
-        return String.format(DIABETES_PROMPT_TEMPLATE,
+        return format(DIABETES_PROMPT_TEMPLATE,
                 prediction.probability() * 100,
                 prediction.hasDisease() ? "has" : "does not have",
                 request.hba1cLevel(),
@@ -81,6 +101,29 @@ public class Prompt {
                 request.bmi(),
                 request.age(),
                 smokingHistory
+        );
+    }
+
+    public static String createStrokePromptFrom(StrokePredictionRequest request, HealthPredictionServiceResponse prediction) {
+        String workType = switch (request.workType()) {
+            case 0 -> "Private";
+            case 1 -> "Self-employed";
+            case 2 -> "Government job";
+            case 3 -> "Children";
+            case 4 -> "Never worked";
+            default -> "Unknown";
+        };
+
+        return format(STROKE_PROMPT_TEMPLATE,
+                prediction.probability() * 100,
+                prediction.hasDisease() ? "will have" : "will not have",
+                request.age(),
+                request.sex(),
+                request.hypertension() == 1,
+                request.heartDisease() == 1,
+                workType,
+                request.avgGlucoseLevel(),
+                request.bmi()
         );
     }
 }

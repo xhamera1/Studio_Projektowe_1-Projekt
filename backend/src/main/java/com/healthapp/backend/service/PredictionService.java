@@ -7,13 +7,16 @@ import com.healthapp.backend.dto.prediction.PredictionResponse;
 import com.healthapp.backend.dto.prediction.StrokePredictionRequest;
 import com.healthapp.backend.repository.DiabetesRepository;
 import com.healthapp.backend.repository.HeartAttackRepository;
+import com.healthapp.backend.repository.StrokeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import static com.healthapp.backend.dto.prediction.Prompt.createDiabetesPromptFrom;
 import static com.healthapp.backend.dto.prediction.Prompt.createHeartAttackPromptFrom;
+import static com.healthapp.backend.dto.prediction.Prompt.createStrokePromptFrom;
 import static com.healthapp.backend.model.DiabetesData.createDiabetesDataFrom;
 import static com.healthapp.backend.model.HeartAttackData.createHeartAttackDataFrom;
+import static com.healthapp.backend.model.StrokeData.createStrokeDataFrom;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class PredictionService {
     private final HealthPredictionClient healthPredictionClient;
     private final DiabetesRepository diabetesRepository;
     private final HeartAttackRepository heartAttackRepository;
+    private final StrokeRepository strokeRepository;
     private final UserService userService;
     private final Gemini gemini;
 
@@ -52,6 +56,15 @@ public class PredictionService {
     }
 
     public PredictionResponse predictStrokeFor(StrokePredictionRequest request, Long userId) {
-        return new PredictionResponse(0.0f, "Stroke prediction recommendations");
+        var prediction = healthPredictionClient.predictStroke(request);
+
+        var user = userService.getUserBy(userId);
+
+        var recommendations = gemini.chat(createStrokePromptFrom(request, prediction));
+
+        var strokeData = createStrokeDataFrom(request, prediction, user, recommendations);
+        strokeRepository.save(strokeData);
+
+        return new PredictionResponse(prediction.probability(), recommendations);
     }
 }

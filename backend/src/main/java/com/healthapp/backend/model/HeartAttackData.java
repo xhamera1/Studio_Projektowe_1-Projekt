@@ -66,7 +66,7 @@ public class HeartAttackData {
 
     @Lob
     @Column(name = "llm_recommendation", columnDefinition = "TEXT")
-    private String llmRecommendation;
+    private String recommendations;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -93,7 +93,7 @@ public class HeartAttackData {
                 .oldpeak(request.oldpeak())
                 .exang(request.exang())
                 .predictionProbability(prediction.probability())
-                .llmRecommendation(recommendations)
+                .recommendations(recommendations)
                 .build();
     }
 }

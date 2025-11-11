@@ -1,12 +1,24 @@
 package com.healthapp.backend.model;
 
-import jakarta.persistence.*;
+import com.healthapp.backend.dto.prediction.HealthPredictionServiceResponse;
+import com.healthapp.backend.dto.prediction.StrokePredictionRequest;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -41,14 +53,10 @@ public class StrokeData {
     private Integer workType;
 
     @Column(name = "avg_glucose_level", nullable = false)
-    private Float avgGlucoseLevel;
+    private Integer avgGlucoseLevel;
 
     @Column(nullable = false)
     private Float bmi;
-
-
-    @Column(name = "prediction_result")
-    private Boolean hasStroke;
 
     @Column(name = "prediction_probability")
     private Float predictionProbability;
@@ -59,7 +67,7 @@ public class StrokeData {
 
     @Lob
     @Column(name = "llm_recommendation", columnDefinition = "TEXT")
-    private String llmRecommendation;
+    private String recommendations;
 
 
     @CreationTimestamp
@@ -69,4 +77,24 @@ public class StrokeData {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public static StrokeData createStrokeDataFrom(
+            StrokePredictionRequest request,
+            HealthPredictionServiceResponse prediction,
+            User user,
+            String recommendations
+    ) {
+        return StrokeData.builder()
+                .user(user)
+                .age(request.age())
+                .sex(request.sex())
+                .hypertension(request.hypertension())
+                .heartDisease(request.heartDisease())
+                .workType(request.workType())
+                .avgGlucoseLevel(request.avgGlucoseLevel())
+                .bmi(request.bmi())
+                .predictionProbability(prediction.probability())
+                .recommendations(recommendations)
+                .build();
+    }
 }
