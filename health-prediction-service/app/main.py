@@ -4,7 +4,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import origins
-from .schemas import PredictionResponse, ModelInfo, DiabetesPredictionRequest, HeartAttackPredictionRequest
+from .schemas import PredictionResponse, ModelInfo, DiabetesPredictionRequest, HeartAttackPredictionRequest, StrokePredictionRequest
 from .services import model_service, ModelService
 
 app = FastAPI(
@@ -59,5 +59,15 @@ async def predict_heart_attack(
     Perform a prediction for heart attack risk.
     """
     model = service.get_model("heart-attack")
+    label, proba = model.predict_from_dict(request.dict())
+    return PredictionResponse(prediction=label, probability=proba)
+
+
+@app.post(path="/api/models/stroke/predict", response_model=PredictionResponse, tags=["Predictions"])
+async def predict_stroke(
+    request: StrokePredictionRequest,
+    service: ModelService = Depends(get_model_service)
+) -> PredictionResponse:
+    model = service.get_model("stroke")
     label, proba = model.predict_from_dict(request.dict())
     return PredictionResponse(prediction=label, probability=proba)

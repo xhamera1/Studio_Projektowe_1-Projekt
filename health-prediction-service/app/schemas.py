@@ -26,6 +26,15 @@ class HeartAttackPredictionRequest(BaseModel):
     oldpeak: float
     exang: int
 
+class StrokePredictionRequest(BaseModel):
+    age: int
+    sex: int
+    hypertension: int
+    heart_disease: int
+    work_type: int
+    avg_glucose_level: int
+    bmi: float
+
 
 class PredictionResponse(BaseModel):
     prediction: int = Field(..., example=1, description="The predicted class label (0 or 1).")

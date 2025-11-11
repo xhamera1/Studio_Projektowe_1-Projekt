@@ -56,6 +56,11 @@ class ModelService:
                 "path": models_dir / "heart_attack-ada_boost_model.pkl",
                 "features": ["age", "sex", "cp", "trestbps", "chol", "thalach", "oldpeak", "exang"],
                 "description": "A model to predict the risk of a heart attack."
+            },
+            "stroke" : {
+                "path" : models_dir / "stroke-svm_model.pkl",
+                "features" : ["age", "sex", "hypertension", "heart_disease", "work_type", "avg_glucose_level", "bmi"],
+                "description" : "A model to predict the risk od stroke."
             }
         }
 
