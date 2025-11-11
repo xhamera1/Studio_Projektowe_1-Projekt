@@ -1,12 +1,12 @@
 import { Link as RouterLink, Navigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import SignupForm from '../components/signup/SignupForm.tsx';
+import Link from '@mui/material/Link';
 
 export default function Signup() {
   const { isAuthenticated } = useAuthenticationContext();
@@ -43,8 +43,8 @@ export default function Signup() {
             <SignupForm />
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
-              <Link variant="body2">
-                <RouterLink to={'/login'} title={'Log in'} />
+              <Link component={RouterLink} to="/login" variant="body2">
+                Log in
               </Link>
             </Typography>
           </CardContent>
