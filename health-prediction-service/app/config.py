@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: Union[str, List[str]] = "http://localhost:8080"
 
     APP_HOST: str = "0.0.0.0"
-    APP_PORT: int = 5000
+    APP_PORT: int = 5001
     APP_RELOAD: bool = False
 
     class Config:

@@ -4,7 +4,8 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import origins
-from .schemas import PredictionResponse, ModelInfo, DiabetesPredictionRequest, HeartAttackPredictionRequest, StrokePredictionRequest
+from .schemas import PredictionResponse, ModelInfo, DiabetesPredictionRequest, HeartAttackPredictionRequest, \
+    StrokePredictionRequest
 from .services import model_service, ModelService
 
 app = FastAPI(
@@ -37,7 +38,7 @@ async def list_available_models(service: ModelService = Depends(get_model_servic
     return service.list_models()
 
 
-@app.post("/api/models/diabetes/predict", response_model=PredictionResponse, tags=["Predictions"])
+@app.post("/api/models/diabetes", response_model=PredictionResponse, tags=["Predictions"])
 async def predict_diabetes(
         request: DiabetesPredictionRequest,
         service: ModelService = Depends(get_model_service)
@@ -50,7 +51,7 @@ async def predict_diabetes(
     return PredictionResponse(prediction=label, probability=proba)
 
 
-@app.post("/api/models/heart-attack/predict", response_model=PredictionResponse, tags=["Predictions"])
+@app.post("/api/models/heart-attack", response_model=PredictionResponse, tags=["Predictions"])
 async def predict_heart_attack(
         request: HeartAttackPredictionRequest,
         service: ModelService = Depends(get_model_service)
@@ -63,10 +64,10 @@ async def predict_heart_attack(
     return PredictionResponse(prediction=label, probability=proba)
 
 
-@app.post(path="/api/models/stroke/predict", response_model=PredictionResponse, tags=["Predictions"])
+@app.post(path="/api/models/stroke", response_model=PredictionResponse, tags=["Predictions"])
 async def predict_stroke(
-    request: StrokePredictionRequest,
-    service: ModelService = Depends(get_model_service)
+        request: StrokePredictionRequest,
+        service: ModelService = Depends(get_model_service)
 ) -> PredictionResponse:
     model = service.get_model("stroke")
     label, proba = model.predict_from_dict(request.dict())

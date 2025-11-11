@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "ai-service", url = "${health-prediction-service.url}", configuration = HealthPredictionClientConfig.class)
 public interface HealthPredictionClient {
 
-    @PostMapping("/api/models/diabetes/predict")
+    @PostMapping("/api/models/diabetes")
     HealthPredictionServiceResponse predictDiabetes(@RequestBody DiabetesPredictionRequest request);
 
-    @PostMapping("/api/models/heart-attack/predict")
+    @PostMapping("/api/models/heart-attack")
     HealthPredictionServiceResponse predictHeartAttack(@RequestBody HeartAttackPredictionRequest request);
 
-    @PostMapping("/api/models/stroke/predict")
+    @PostMapping("/api/models/stroke")
     HealthPredictionServiceResponse predictStroke(@RequestBody StrokePredictionRequest request);
 }
