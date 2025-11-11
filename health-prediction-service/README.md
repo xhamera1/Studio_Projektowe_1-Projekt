@@ -121,7 +121,7 @@ The service provides dedicated endpoints for each type of health risk prediction
 
 #### Diabetes Prediction
 
-- **URL**: `/api/models/diabetes/predict`
+- **URL**: `/api/models/diabetes`
 - **Method**: `POST`
 - **Request Body**: A JSON object with the required features for the diabetes model.
 - **Success Response**: `200 OK` with the prediction result and probability.
@@ -129,7 +129,7 @@ The service provides dedicated endpoints for each type of health risk prediction
 **Example Request:**
 
 ```bash
-curl -X POST http://localhost:5000/api/models/diabetes/predict \
+curl -X POST http://localhost:5000/api/models/diabetes \
 -H "Content-Type: application/json" \
 -d '{
       "hba1c_level": 6.6,
@@ -151,7 +151,7 @@ curl -X POST http://localhost:5000/api/models/diabetes/predict \
 
 #### Heart Attack Prediction
 
-- **URL**: `/api/models/heart-attack/predict`
+- **URL**: `/api/models/heart-attack`
 - **Method**: `POST`
 - **Request Body**: A JSON object with the required features for the heart attack model.
 - **Success Response**: `200 OK` with the prediction result and probability.
@@ -159,7 +159,7 @@ curl -X POST http://localhost:5000/api/models/diabetes/predict \
 **Example Request:**
 
 ```bash
-curl -X POST http://localhost:5000/api/models/heart-attack/predict \
+curl -X POST http://localhost:5000/api/models/heart-attack \
 -H "Content-Type: application/json" \
 -d '{
       "age": 63,
@@ -184,7 +184,7 @@ curl -X POST http://localhost:5000/api/models/heart-attack/predict \
 
 #### Stroke Prediction
 
-- **URL**: `/api/models/stroke/predict`
+- **URL**: `/api/models/stroke`
 - **Method**: `POST`
 - **Request Body**: A JSON object with the required features for the stroke model.
 - **Success Response**: `200 OK` with the prediction result and probability.
@@ -192,7 +192,7 @@ curl -X POST http://localhost:5000/api/models/heart-attack/predict \
 **Example Request:**
 
 ```bash
-curl -X POST http://localhost:5000/api/models/stroke/predict \
+curl -X POST http://localhost:5000/api/models/stroke \
 -H "Content-Type: application/json" \
 -d '{
       "age": 67,
