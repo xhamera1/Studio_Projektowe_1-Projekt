@@ -1,12 +1,18 @@
 package com.healthapp.backend.controller;
 
-import com.healthapp.backend.dto.prediction.*;
-import com.healthapp.backend.service.ChatService;
+import com.healthapp.backend.dto.prediction.DiabetesPredictionRequest;
+import com.healthapp.backend.dto.prediction.HabitsPredictionRequest;
+import com.healthapp.backend.dto.prediction.HabitsPredictionResponse;
+import com.healthapp.backend.dto.prediction.HeartAttackPredictionRequest;
+import com.healthapp.backend.dto.prediction.PredictionResponse;
+import com.healthapp.backend.dto.prediction.StrokePredictionRequest;
+import com.healthapp.backend.service.Gemini;
+import com.healthapp.backend.service.PredictionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,36 +22,35 @@ import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 @RestController
 @RequestMapping("/api/predictions")
+@Slf4j
 @RequiredArgsConstructor
 public class PredictionController {
 
-    private static final Logger log = LoggerFactory.getLogger(PredictionController.class);
-
-    private final ChatService chatService;
+    private final Gemini gemini;
+    private final PredictionService predictionService;
 
     @PostMapping(value = "/diabetes", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    public ResponseEntity<DiabetesPredictionResponse> predictDiabetes(@RequestBody @Valid DiabetesPredictionRequest request) {
-        log.info("Received diabetes prediction request: {}", request);
-        return ResponseEntity.ok(new DiabetesPredictionResponse());
+    public PredictionResponse predictDiabetes(@RequestBody @Valid DiabetesPredictionRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("Received diabetes prediction request for user {}: {}", userDetails.getUsername(), request);
+        return predictionService.predictDiabetesFor(request, userDetails.getUsername());
     }
 
     @PostMapping(value = "/stroke", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    public ResponseEntity<StrokePredictionResponse> predictStroke(@RequestBody @Valid StrokePredictionRequest request) {
+    public PredictionResponse predictStroke(@RequestBody @Valid StrokePredictionRequest request, @AuthenticationPrincipal UserDetails userDetails) {
         log.info("Received stroke prediction request: {}", request);
-        return ResponseEntity.ok(new StrokePredictionResponse());
+        return new PredictionResponse(0, "");
     }
 
     @PostMapping(value = "/heart-attack", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    public ResponseEntity<HeartAttackPredictionResponse> predictHeartAttack(@RequestBody @Valid HeartAttackPredictionRequest request) {
+    public PredictionResponse predictHeartAttack(@RequestBody @Valid HeartAttackPredictionRequest request, @AuthenticationPrincipal UserDetails userDetails) {
         log.info("Received heart attack prediction request: {}", request);
-        return ResponseEntity.ok(new HeartAttackPredictionResponse());
+        return predictionService.predictHeartAttackFor(request, userDetails.getUsername());
     }
 
     @PostMapping(value = "/habits", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    public ResponseEntity<HabitsPredictionResponse> predictHabits(@RequestBody @Valid HabitsPredictionRequest request) {
+    public HabitsPredictionResponse predictHabits(@RequestBody @Valid HabitsPredictionRequest request) {
         log.info("Received habits prediction request: {}", request);
-        String response = chatService.chat("How many hours of sleep should a healthy adult get?");
-        log.info("LLM response: {}", response);
-        return ResponseEntity.ok(new HabitsPredictionResponse(response));
+        String response = gemini.chat("How many hours of sleep should a healthy adult get?");
+        return new HabitsPredictionResponse(response);
     }
 }

@@ -24,21 +24,19 @@ security:
     secret-key: 5cea9ea4a0149217c7bf7c90ee7d61dc4713711cdcd812fc96ec81234b05d838
     expiration-time: 1075200000
 
+health-prediction-service:
+  url: http://localhost:5001
+
 gemini:
   api:
     key: ${GEMINI_API_KEY}
     version: v1beta
   model: gemini-2.0-flash
-  max:
-    output:
-      tokens: 1024
-  temperature: 0.2
-  top:
-    p: 0.95
-  system:
-    instruction: 'You are a health and wellness advisor analyzing health questionnaire responses. IMPORTANT GUIDELINES: Provide evidence based health suggestions only, Focus on lifestyle improvements, not medical diagnoses, Always recommend consulting healthcare professionals for serious concerns, Be specific and actionable in your suggestions, Consider the whole person approach (physical, mental, lifestyle), Never provide specific medication recommendations, If symptoms suggest serious conditions, strongly recommend medical consultation. Your role is to provide general wellness guidance, not medical diagnosis or treatment.'
-  timeout:
-    ms: 30000
+  system-instruction: 'You are a health and wellness advisor analyzing health questionnaire responses. IMPORTANT GUIDELINES: Provide evidence based health suggestions only, Focus on lifestyle improvements, not medical diagnoses, Always recommend consulting healthcare professionals for serious concerns, Be specific and actionable in your suggestions, Consider the whole person approach (physical, mental, lifestyle), Never provide specific medication recommendations, If symptoms suggest serious conditions, strongly recommend medical consultation. Your role is to provide general wellness guidance, not medical diagnosis or treatment.'
+  max-output-tokens: 2048
+  temperature: 0.3
+  top-p: 0.90
+  timeout-ms: 30000
 
 logging:
   level:

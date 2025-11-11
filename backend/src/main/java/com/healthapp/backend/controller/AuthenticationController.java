@@ -8,22 +8,20 @@ import com.healthapp.backend.service.AuthenticationService;
 import com.healthapp.backend.service.JwtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.healthapp.backend.dto.authentication.LoginResponse.createLoginResponseFor;
-import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/auth")
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationController {
-
-    private static final Logger log = getLogger(AuthenticationController.class);
 
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;

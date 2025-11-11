@@ -2,8 +2,6 @@ package com.healthapp.backend.service;
 
 import com.healthapp.backend.dto.user.SignupRequest;
 import com.healthapp.backend.dto.user.UserEditRequest;
-import com.healthapp.backend.exception.UserAlreadyExistsException;
-import com.healthapp.backend.exception.UserNotFoundException;
 import com.healthapp.backend.model.User;
 import com.healthapp.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.healthapp.backend.exception.UserAlreadyExistsException.userAlreadyExistsException;
+import static com.healthapp.backend.exception.UserNotFoundException.userNotFoundException;
 import static com.healthapp.backend.model.User.Role.USER;
 
 @Service
@@ -25,12 +25,12 @@ public class UserService {
     public User getUserBy(String username) {
         return userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found"));
+                .orElseThrow(() -> userNotFoundException(username));
     }
 
     public User createUser(SignupRequest request) {
         if (userRepository.existsByUsernameOrEmail(request.username(), request.email())) {
-            throw new UserAlreadyExistsException("User already exists with given username or email");
+            throw userAlreadyExistsException();
         }
 
         User user = User.builder()

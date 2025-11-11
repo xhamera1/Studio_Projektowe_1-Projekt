@@ -1,7 +1,11 @@
 package com.healthapp.backend.config;
 
 import com.google.genai.Client;
-import com.google.genai.types.*;
+import com.google.genai.types.Content;
+import com.google.genai.types.GenerateContentConfig;
+import com.google.genai.types.HttpOptions;
+import com.google.genai.types.Part;
+import com.google.genai.types.SafetySetting;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +14,14 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 import static com.google.genai.types.HarmBlockThreshold.Known.BLOCK_LOW_AND_ABOVE;
-import static com.google.genai.types.HarmCategory.Known.*;
+import static com.google.genai.types.HarmCategory.Known.HARM_CATEGORY_DANGEROUS_CONTENT;
+import static com.google.genai.types.HarmCategory.Known.HARM_CATEGORY_HARASSMENT;
+import static com.google.genai.types.HarmCategory.Known.HARM_CATEGORY_HATE_SPEECH;
+import static com.google.genai.types.HarmCategory.Known.HARM_CATEGORY_SEXUALLY_EXPLICIT;
 
 @Slf4j
 @Configuration
-public class LLMClientConfig {
+public class GeminiClientConfig {
 
     @Value("${gemini.api.key}")
     private String apiKey;
@@ -25,19 +32,19 @@ public class LLMClientConfig {
     @Value("${gemini.model}")
     private String model;
 
-    @Value("${gemini.max.output.tokens}")
+    @Value("${gemini.system-instruction}")
+    private String systemInstruction;
+
+    @Value("${gemini.max-output-tokens}")
     private int maxOutputTokens;
 
     @Value("${gemini.temperature}")
     private float temperature;
 
-    @Value("${gemini.top.p}")
+    @Value("${gemini.top-p}")
     private float topP;
 
-    @Value("${gemini.system.instruction}")
-    private String systemInstruction;
-
-    @Value("${gemini.timeout.ms}")
+    @Value("${gemini.timeout-ms}")
     private int timeoutMs;
 
     @Bean

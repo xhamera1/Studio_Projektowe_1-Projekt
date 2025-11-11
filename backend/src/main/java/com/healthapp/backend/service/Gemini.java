@@ -4,15 +4,17 @@ import com.google.genai.Client;
 import com.google.genai.types.GenerateContentConfig;
 import com.google.genai.types.GenerateContentResponse;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class ChatService {
+import static com.healthapp.backend.exception.GeminiException.geminiEmptyPromptException;
+import static com.healthapp.backend.exception.GeminiException.geminiNoContentException;
+import static com.healthapp.backend.exception.GeminiException.geminiSafetyBlockException;
 
-    private static final Logger log = LoggerFactory.getLogger(ChatService.class);
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class Gemini {
 
     private final Client geminiClient;
     private final GenerateContentConfig geminiConfig;
@@ -21,7 +23,7 @@ public class ChatService {
     public String chat(String prompt) {
         if (prompt == null || prompt.trim().isEmpty()) {
             log.warn("Prompt is null or empty");
-            throw new IllegalArgumentException("Prompt cannot be null or empty");
+            throw geminiEmptyPromptException();
         }
 
         GenerateContentResponse response = geminiClient.models
@@ -29,15 +31,16 @@ public class ChatService {
 
         if (response.candidates().isEmpty()) {
             log.warn("Received empty response from LLM");
-            throw new RuntimeException("LLM returned no content");
+            throw geminiNoContentException();
         }
         String finishReason = response.candidates().get().getFirst().finishReason().map(Object::toString).orElse("UNKNOWN");
 
         if (finishReason.equals("SAFETY")) {
             log.warn("Response blocked due to safety settings");
-            throw new RuntimeException("LLM response blocked due to safety settings");
+            throw geminiSafetyBlockException();
         }
 
+        log.info("Received response from LLM: {}", response);
         return response.text();
     }
 

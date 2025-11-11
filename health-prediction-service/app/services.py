@@ -1,10 +1,10 @@
-import joblib
-import numpy as np
 from pathlib import Path
-from fastapi import HTTPException
 from typing import Dict, Any, List, Tuple
 
-from .schemas import PredictionRequest
+import joblib
+import numpy as np
+from fastapi import HTTPException
+
 
 class PredictionModel:
     def __init__(self, model_path: Path, required_features: List[str], description: str):
@@ -24,9 +24,9 @@ class PredictionModel:
         except (ValueError, TypeError) as e:
             raise HTTPException(status_code=422, detail=f"Feature type conversion error: {e}")
 
-    def predict(self, request: PredictionRequest) -> Tuple[int, float]:
-        validated_features = self._validate_payload(request.features)
-        
+    def predict_from_dict(self, features: Dict[str, Any]) -> Tuple[int, float]:
+        validated_features = self._validate_payload(features)
+
         try:
             X = np.array(validated_features).reshape(1, -1)
             label = int(self.model.predict(X)[0])
@@ -82,6 +82,7 @@ class ModelService:
             }
             for model_id, model in self._models.items()
         ]
+
 
 # jedna instancja do uzywania przez aplikacje
 model_service = ModelService()
