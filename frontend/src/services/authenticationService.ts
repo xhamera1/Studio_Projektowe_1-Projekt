@@ -56,5 +56,40 @@ export const authenticationService = {
 
     return response.json();
   }
+  ,
+  /* Update user data. Sends a PUT to /api/users/{username} with the provided body and optional JWT. */
+  updateUser: async (username: string, body: Partial<{ username:string; email:string; firstName:string; lastName:string }>, token?: string) => {
+    const headers: Record<string,string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${ENDPOINTS.USERS}/${encodeURIComponent(username)}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update user ${username}: ${response.status}`);
+    }
+
+    return response.json();
+  },
+
+  /* Delete the given user. Calls DELETE /api/users/{username} and requires authorization. */
+  deleteUser: async (username: string, token?: string) => {
+    const headers: Record<string,string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(`${ENDPOINTS.USERS}/${encodeURIComponent(username)}`, {
+      method: 'DELETE',
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete user ${username}: ${response.status}`);
+    }
+
+    return;
+  }
 };
 export { API_BASE_URL };
