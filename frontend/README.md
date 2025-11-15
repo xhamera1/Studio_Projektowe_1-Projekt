@@ -35,7 +35,7 @@ VITE_ENABLE_DEBUG=false
 ## Available Scripts
 
 | Script               | Description               |
-|----------------------|---------------------------|
+| -------------------- | ------------------------- |
 | `npm install`        | Install dependencies      |
 | `npm run dev`        | Start development server  |
 | `npm run build`      | Build for production      |
