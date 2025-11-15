@@ -1,4 +1,4 @@
-import { ApplicationContextProvider } from './contexts/ApplicationContextProvider.tsx';
+import { UserContextProvider } from './contexts/UserContextProvider.tsx';
 import { Route, Routes } from 'react-router-dom';
 import Signup from './pages/Signup.tsx';
 import Login from './pages/Login.tsx';
@@ -11,7 +11,7 @@ import { AuthenticationContextProvider } from './contexts/AuthenticationContextP
 
 function App() {
   return (
-    <ApplicationContextProvider>
+    <UserContextProvider>
       <AuthenticationContextProvider>
         <Routes>
           <Route path={'/signup'} element={<Signup />} />
@@ -27,7 +27,7 @@ function App() {
           <Route path={'*'} element={<NotFound />} />
         </Routes>
       </AuthenticationContextProvider>
-    </ApplicationContextProvider>
+    </UserContextProvider>
   );
 }
 

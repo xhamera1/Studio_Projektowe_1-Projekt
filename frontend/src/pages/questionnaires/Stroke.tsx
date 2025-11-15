@@ -22,7 +22,7 @@ export const workTypeOptions = [
   'Self-employed',
   'Government job',
   'Children',
-  'Never_worked'
+  'Never worked'
 ] as const;
 
 export type FormValues = {

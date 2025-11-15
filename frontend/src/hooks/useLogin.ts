@@ -1,5 +1,5 @@
 import { useAuthenticationContext } from '../contexts/AuthenticationContextProvider.tsx';
-import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
+import { useApplicationContext } from '../contexts/UserContextProvider.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import type { ApiError, LoginRequest, LoginResponse } from '../utils/types.ts';

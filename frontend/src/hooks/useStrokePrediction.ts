@@ -6,18 +6,23 @@ import type {
 } from '../utils/types.ts';
 import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
 import { healthPredictionService } from '../services/healthPredictionService.ts';
-import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
+import { useApplicationContext } from '../contexts/UserContextProvider.tsx';
 
 export const useStrokePrediction = () => {
-  const { getTokenValue } = useAuthenticationContext();
-  const { getUser } = useApplicationContext();
+  const { isAuthenticated, token } = useAuthenticationContext();
+  const { user } = useApplicationContext();
 
   return useMutation<PredictionResponse, ApiError, StrokePredictionRequest>({
     mutationKey: ['strokePrediction'],
     mutationFn: async (request: StrokePredictionRequest) => {
-      const token = getTokenValue();
-      const userId = getUser().id;
-      return healthPredictionService.predictStroke(request, userId, token);
+      if (!isAuthenticated || !user) {
+        throw new Error('User is not authenticated');
+      }
+      return healthPredictionService.predictStroke(
+        request,
+        user.id,
+        token!.value
+      );
     }
   });
 };

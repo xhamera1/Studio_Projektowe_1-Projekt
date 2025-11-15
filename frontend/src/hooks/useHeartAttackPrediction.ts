@@ -6,11 +6,11 @@ import type {
 } from '../utils/types.ts';
 import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
 import { healthPredictionService } from '../services/healthPredictionService.ts';
-import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
+import { useApplicationContext } from '../contexts/UserContextProvider.tsx';
 
 export const useHeartAttackPrediction = () => {
-  const { getTokenValue } = useAuthenticationContext();
-  const { getUser } = useApplicationContext();
+  const { isAuthenticated, token } = useAuthenticationContext();
+  const { user } = useApplicationContext();
 
   return useMutation<
     PredictionResponse,
@@ -19,9 +19,14 @@ export const useHeartAttackPrediction = () => {
   >({
     mutationKey: ['heartAttackPrediction'],
     mutationFn: async (request: HeartAttackPredictionRequest) => {
-      const token = getTokenValue();
-      const userId = getUser().id;
-      return healthPredictionService.predictHeartAttack(request, userId, token);
+      if (!isAuthenticated || !user) {
+        throw new Error('User is not authenticated');
+      }
+      return healthPredictionService.predictHeartAttack(
+        request,
+        user.id,
+        token!.value
+      );
     }
   });
 };

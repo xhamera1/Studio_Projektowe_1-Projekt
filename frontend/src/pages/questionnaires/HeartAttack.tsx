@@ -8,7 +8,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import { useHeartAttackPrediction } from '../../hooks/useHeartAttackPrediction.tsx';
+import { useHeartAttackPrediction } from '../../hooks/useHeartAttackPrediction.ts';
 import ErrorAlert from '../../components/ErrorAlert.tsx';
 
 const sexOptions = ['Female', 'Male'] as const;

@@ -11,6 +11,15 @@ export type User = {
   updatedAt: Date;
 };
 
+export type UserDemographics = {
+  sex: number;
+  dateOfBirth: Date;
+  weight: number;
+  height: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type JwtToken = {
   value: string;
   expiresIn: number;
@@ -71,6 +80,19 @@ export type LoginRequest = {
 export type SignupRequest = {
   username: string;
   password: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+};
+
+export type UserDemographicsRequest = {
+  sex: number;
+  dateOfBirth: Date;
+  weight: number;
+  height: number;
+};
+
+export type UpdateUserRequest = {
   email: string;
   firstName: string;
   lastName: string;

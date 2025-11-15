@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 
 @Builder
 public record UserDemographicDataResponse(
-        int sex,
+        Integer sex,
         LocalDate dateOfBirth,
-        float weight,
-        float height,
+        Float weight,
+        Float height,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
