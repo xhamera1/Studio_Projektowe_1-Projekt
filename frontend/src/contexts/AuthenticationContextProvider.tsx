@@ -3,7 +3,7 @@ import { useLocalStorage } from 'usehooks-ts';
 import type { JwtToken } from '../utils/types.ts';
 
 type AuthenticationContextType = {
-  getTokenValue: () => string | null;
+  getTokenValue: () => string;
   isAuthenticated: boolean;
   saveAuthentication: (jwtToken: JwtToken) => void;
   clearAuthentication: () => void;
@@ -18,7 +18,7 @@ export type AuthenticationToken = {
   expiryTime: number;
 };
 
-const AUTHENTICATION_TOKEN_KEY = 'authenticationToken';
+export const AUTHENTICATION_TOKEN_KEY = 'authenticationToken';
 
 type AuthenticationContextProviderProps = {
   children: ReactNode;
@@ -37,7 +37,7 @@ export const AuthenticationContextProvider = ({
     if (isAuthenticated) {
       return token.value;
     }
-    return null;
+    throw new Error('User is not authenticated');
   };
 
   const saveAuthentication = (jwtToken: JwtToken) => {

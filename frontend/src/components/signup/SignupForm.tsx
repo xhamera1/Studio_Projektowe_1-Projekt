@@ -1,23 +1,38 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { Alert } from '@mui/material';
-import { useSignupForm } from '../../hooks/useSignupForm.ts';
+import { Stack } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useSignup } from '../../hooks/useSignup.ts';
+import ErrorAlert from '../ErrorAlert.tsx';
+import type { SignupRequest } from '../../utils/types.ts';
+
+const DEFAULT_FORM_VALUES: SignupRequest = {
+  username: '',
+  password: '',
+  email: '',
+  firstName: '',
+  lastName: ''
+};
 
 const SignupForm = () => {
+  const { mutate: signup, isPending, error, isError } = useSignup();
   const {
-    credentials,
-    errors,
-    isPending,
-    submitError,
-    handleChange,
-    handleSubmit
-  } = useSignupForm();
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<SignupRequest>({
+    mode: 'onSubmit',
+    defaultValues: DEFAULT_FORM_VALUES
+  });
 
+  const onSubmit = (data: SignupRequest) => {
+    signup(data);
+  };
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       noValidate
       sx={{
         display: 'flex',
@@ -26,81 +41,106 @@ const SignupForm = () => {
         gap: 2
       }}
     >
-      {submitError && <Alert severity="error">{submitError}</Alert>}
-      <TextField
-        error={!!errors.username}
-        helperText={errors.username}
-        id="username"
-        label="Username"
-        type="text"
-        name="username"
-        autoComplete="username"
-        autoFocus
-        required
-        fullWidth
-        variant="outlined"
-        value={credentials.username}
-        onChange={handleChange}
-      />
-      <TextField
-        error={!!errors.password}
-        helperText={errors.password}
-        name="password"
-        label="Password"
-        type="password"
-        id="password"
-        autoComplete="new-password"
-        required
-        fullWidth
-        variant="outlined"
-        value={credentials.password}
-        onChange={handleChange}
-      />
-      <TextField
-        error={!!errors.email}
-        helperText={errors.email}
-        name="email"
-        label="Email"
-        type="email"
-        id="email"
-        autoComplete="email"
-        required
-        fullWidth
-        variant="outlined"
-        value={credentials.email}
-        onChange={handleChange}
-      />
-      <TextField
-        error={!!errors.firstName}
-        helperText={errors.firstName}
-        name="firstName"
-        label="First Name"
-        type="text"
-        id="firstName"
-        autoComplete="given-name"
-        required
-        fullWidth
-        variant="outlined"
-        value={credentials.firstName}
-        onChange={handleChange}
-      />
-      <TextField
-        error={!!errors.lastName}
-        helperText={errors.lastName}
-        name="lastName"
-        label="Last Name"
-        type="text"
-        id="lastName"
-        autoComplete="family-name"
-        required
-        fullWidth
-        variant="outlined"
-        value={credentials.lastName}
-        onChange={handleChange}
-      />
-      <Button type="submit" fullWidth variant="contained" disabled={isPending}>
-        {isPending ? 'Signing up...' : 'Sign Up'}
-      </Button>
+      <Stack spacing={2}>
+        {isError && <ErrorAlert error={error} />}
+
+        <TextField
+          label="Username"
+          type="text"
+          autoComplete="username"
+          placeholder={'Choose a unique username'}
+          autoFocus
+          required
+          fullWidth
+          variant="outlined"
+          {...register('username', {
+            required: 'Username is required.',
+            minLength: {
+              value: 3,
+              message: 'Username must be at least 3 characters long.'
+            }
+          })}
+          error={!!errors.username}
+          helperText={errors.username ? errors.username.message : ' '}
+        />
+
+        <TextField
+          label="Password"
+          type="password"
+          autoComplete="new-password"
+          placeholder={'Create a strong password'}
+          required
+          fullWidth
+          variant="outlined"
+          {...register('password', {
+            required: 'Password is required.',
+            minLength: {
+              value: 11,
+              message: 'Password must be at least 11 characters long.'
+            }
+          })}
+          error={!!errors.password}
+          helperText={errors.password ? errors.password.message : ' '}
+        />
+
+        <TextField
+          label="Email"
+          type="email"
+          autoComplete="email"
+          placeholder={'Enter your email address'}
+          required
+          fullWidth
+          variant="outlined"
+          {...register('email', {
+            required: 'Email is required.',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Please enter a valid email address.'
+            }
+          })}
+          error={!!errors.email}
+          helperText={errors.email ? errors.email.message : ' '}
+        />
+
+        <TextField
+          label="First Name"
+          type="text"
+          autoComplete="given-name"
+          placeholder={'Enter your first name'}
+          required
+          fullWidth
+          variant="outlined"
+          {...register('firstName', {
+            required: 'First name is required.'
+          })}
+          error={!!errors.firstName}
+          helperText={errors.firstName ? errors.firstName.message : ' '}
+        />
+
+        <TextField
+          label="Last Name"
+          type="text"
+          autoComplete="family-name"
+          placeholder={'Enter your last name'}
+          required
+          fullWidth
+          variant="outlined"
+          {...register('lastName', {
+            required: 'Last name is required.'
+          })}
+          error={!!errors.lastName}
+          helperText={errors.lastName ? errors.lastName.message : ' '}
+        />
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          disabled={isPending}
+        >
+          {isPending ? 'Signing Up...' : 'Sign Up'}
+        </Button>
+      </Stack>
     </Box>
   );
 };

@@ -1,10 +1,11 @@
 import { createContext, type ReactNode, useContext } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 import type { User } from '../utils/types.ts';
+import { AUTHENTICATION_TOKEN_KEY } from './AuthenticationContextProvider.tsx';
 
 type ApplicationContextType = {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  getUser: () => User;
+  setUser: (user: User) => void;
 };
 
 const ApplicationContext = createContext<ApplicationContextType | undefined>(
@@ -22,8 +23,16 @@ export const ApplicationContextProvider = ({
 }: ApplicationContextProviderProps) => {
   const [user, setUser] = useLocalStorage<User | null>(USER_KEY, null);
 
+  const getUser = () => {
+    if (user) {
+      return user;
+    }
+    localStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
+    throw new Error('No user is set in the application context');
+  };
+
   return (
-    <ApplicationContext.Provider value={{ user, setUser }}>
+    <ApplicationContext.Provider value={{ getUser, setUser }}>
       {children}
     </ApplicationContext.Provider>
   );
