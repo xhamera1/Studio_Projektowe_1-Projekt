@@ -12,11 +12,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useMutation } from '@tanstack/react-query';
-import { userService } from '../services/userService.ts';
-import type { ApiError } from '../utils/types.ts';
-import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
-import { useApplicationContext } from '../contexts/UserContextProvider.tsx';
-import ErrorAlert from './ErrorAlert.tsx';
+import ErrorAlert from '../common/ErrorAlert.tsx';
+import { userService } from '../../services/userService.ts';
+import type { ApiError } from '../../utils/types.ts';
+import useAuthenticationContext from '../../contexts/AuthenticationContextProvider.tsx';
+import { useApplicationContext } from '../../contexts/UserContextProvider.tsx';
 
 const DeleteAccount = () => {
   const [open, setOpen] = useState(false);

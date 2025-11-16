@@ -2,14 +2,13 @@ import { useForm } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import CssBaseline from '@mui/material/CssBaseline';
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { useHeartAttackPrediction } from '../../hooks/useHeartAttackPrediction.ts';
-import ErrorAlert from '../../components/ErrorAlert.tsx';
+import ErrorAlert from '../../components/common/ErrorAlert.tsx';
 
 const sexOptions = ['Female', 'Male'] as const;
 const cpOptions = [
@@ -82,7 +81,6 @@ const HeartAttack = () => {
 
   return (
     <>
-      <CssBaseline enableColorScheme />
       <Container
         maxWidth="sm"
         sx={{

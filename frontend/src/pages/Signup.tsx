@@ -1,5 +1,4 @@
 import { Link as RouterLink, Navigate } from 'react-router-dom';
-import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
 import Container from '@mui/material/Container';
@@ -17,7 +16,6 @@ export default function Signup() {
 
   return (
     <>
-      <CssBaseline enableColorScheme />
       <Container
         component="main"
         maxWidth="xs"

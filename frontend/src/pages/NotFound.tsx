@@ -1,50 +1,89 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import errorImg from '../assets/error.jpg';
+import { Box, Button, Container, Typography } from '@mui/material';
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
+import { useNavigate } from 'react-router-dom';
 
-export default function NotFound(): React.JSX.Element {
+const NotFound = () => {
+  const navigate = useNavigate();
+
   return (
-    <Box
-      component="main"
-      sx={{
-        alignItems: 'center',
-        display: 'flex',
-        justifyContent: 'center',
-        minHeight: '100%'
-      }}
-    >
-      <Stack spacing={3} sx={{ alignItems: 'center', maxWidth: 'md' }}>
-        <Box>
-          <Box
-            component="img"
-            alt="Under development"
-            src={errorImg}
-            sx={{
-              display: 'inline-block',
-              height: 'auto',
-              maxWidth: '100%',
-              width: '400px'
-            }}
-          />
-        </Box>
-        <Typography variant="h3" sx={{ textAlign: 'center' }}>
-          404: The page you are looking for isn&apos;t here
-        </Typography>
+    <Container component="main" maxWidth="md">
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          textAlign: 'center',
+          py: 4
+        }}
+      >
+        <ReportProblemOutlinedIcon
+          sx={{
+            fontSize: '100px',
+            color: 'primary.main',
+            mb: 2
+          }}
+        />
+
         <Typography
-          color="text.secondary"
-          variant="body1"
-          sx={{ textAlign: 'center' }}
+          variant="h1"
+          component="h1"
+          sx={{
+            // Responsive font size for the "404"
+            fontSize: { xs: '6rem', sm: '8rem', md: '10rem' },
+            lineHeight: 1,
+            fontWeight: 800,
+            letterSpacing: '0.05em'
+          }}
         >
-          You either tried some shady route or you came here by mistake.
-          Whichever it is, try using the navigation
+          404
         </Typography>
-        <Button href={'/'} variant="contained">
-          Go back to home
+
+        <Typography
+          variant="h4"
+          component="h2"
+          gutterBottom
+          sx={{
+            fontWeight: 600,
+            color: 'text.primary',
+            fontSize: { xs: '1.75rem', sm: '2.25rem' }
+          }}
+        >
+          Page Not Found
+        </Typography>
+
+        <Typography
+          variant="body1"
+          color="textSecondary"
+          sx={{
+            maxWidth: '450px',
+            mt: 1,
+            mb: 4,
+            fontSize: { xs: '1rem', sm: '1.125rem' }
+          }}
+        >
+          We're sorry, but the page you are looking for could not be found. It
+          might have been moved, deleted, or you may have mistyped the URL.
+        </Typography>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/')}
+          sx={{
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.12)'
+            }
+          }}
+        >
+          Go Back to Homepage
         </Button>
-      </Stack>
-    </Box>
+      </Box>
+    </Container>
   );
-}
+};
+
+export default NotFound;

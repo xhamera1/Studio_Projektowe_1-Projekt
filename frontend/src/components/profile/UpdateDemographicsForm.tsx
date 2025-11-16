@@ -13,10 +13,10 @@ import type {
   ApiError,
   UserDemographics,
   UserDemographicsRequest
-} from '../utils/types.ts';
-import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
-import { userDemographicsService } from '../services/userDemographicsService.ts';
-import ErrorAlert from './ErrorAlert.tsx';
+} from '../../utils/types.ts';
+import useAuthenticationContext from '../../contexts/AuthenticationContextProvider.tsx';
+import { userDemographicsService } from '../../services/userDemographicsService.ts';
+import ErrorAlert from '../common/ErrorAlert.tsx';
 
 const sexOptions = ['Female', 'Male'] as const;
 

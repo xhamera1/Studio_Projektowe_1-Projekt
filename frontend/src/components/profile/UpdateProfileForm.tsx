@@ -9,11 +9,11 @@ import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert } from '@mui/material';
-import type { ApiError, UpdateUserRequest, User } from '../utils/types.ts';
-import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
-import { useApplicationContext } from '../contexts/UserContextProvider.tsx';
-import { userService } from '../services/userService.ts';
-import ErrorAlert from './ErrorAlert.tsx';
+import ErrorAlert from '../common/ErrorAlert.tsx';
+import { userService } from '../../services/userService.ts';
+import type { ApiError, UpdateUserRequest, User } from '../../utils/types.ts';
+import { useApplicationContext } from '../../contexts/UserContextProvider.tsx';
+import useAuthenticationContext from '../../contexts/AuthenticationContextProvider.tsx';
 
 type FormValues = UpdateUserRequest;
 

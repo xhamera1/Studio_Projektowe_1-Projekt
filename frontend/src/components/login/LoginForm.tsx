@@ -4,8 +4,8 @@ import TextField from '@mui/material/TextField';
 import type { LoginRequest } from '../../utils/types.ts';
 import { useForm } from 'react-hook-form';
 import { useLogin } from '../../hooks/useLogin.ts';
-import ErrorAlert from '../ErrorAlert.tsx';
 import Stack from '@mui/material/Stack';
+import ErrorAlert from '../common/ErrorAlert.tsx';
 
 const DEFAULT_FORM_VALUES: LoginRequest = {
   username: '',
