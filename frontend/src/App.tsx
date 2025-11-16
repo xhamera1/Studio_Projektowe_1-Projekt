@@ -10,6 +10,7 @@ import ProtectedRoutes from './routes/ProtectedRoutes.tsx';
 import { AuthenticationContextProvider } from './contexts/AuthenticationContextProvider.tsx';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { theme } from './utils/theme.ts';
+import PredictionHistory from './pages/PredictionHistory.tsx';
 
 function App() {
   return (
@@ -23,6 +24,10 @@ function App() {
             <Route element={<ProtectedRoutes />}>
               <Route path={'/'} element={<Home />} />
               <Route path={'/account'} element={<Account />} />
+              <Route
+                path={'/prediction-history'}
+                element={<PredictionHistory />}
+              />
               <Route
                 path={'/questionnaire/*'}
                 element={<QuestionnaireRoutes />}

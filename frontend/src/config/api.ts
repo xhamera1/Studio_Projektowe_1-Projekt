@@ -25,6 +25,7 @@ export function apiUrl(path: string): string {
 
 export const ENDPOINTS = {
   PREDICTIONS: apiUrl('/api/predictions'),
+  PREDICTION_HISTORY: apiUrl('/api/prediction-history'),
   USERS: apiUrl('/api/users'),
   USER_DEMOGRAPHICS: apiUrl('/api/users/demographics'),
   LOGIN: apiUrl('/auth/login')

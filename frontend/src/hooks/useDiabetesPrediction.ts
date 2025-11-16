@@ -6,11 +6,11 @@ import type {
   DiabetesPredictionRequest,
   PredictionResponse
 } from '../utils/types.ts';
-import { useApplicationContext } from '../contexts/UserContextProvider.tsx';
+import { useUserContext } from '../contexts/UserContextProvider.tsx';
 
 export const useDiabetesPrediction = () => {
   const { isAuthenticated, token } = useAuthenticationContext();
-  const { user } = useApplicationContext();
+  const { user } = useUserContext();
 
   return useMutation<PredictionResponse, ApiError, DiabetesPredictionRequest>({
     mutationKey: ['diabetesPrediction'],

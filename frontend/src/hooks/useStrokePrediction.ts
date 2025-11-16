@@ -6,11 +6,11 @@ import type {
 } from '../utils/types.ts';
 import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
 import { healthPredictionService } from '../services/healthPredictionService.ts';
-import { useApplicationContext } from '../contexts/UserContextProvider.tsx';
+import { useUserContext } from '../contexts/UserContextProvider.tsx';
 
 export const useStrokePrediction = () => {
   const { isAuthenticated, token } = useAuthenticationContext();
-  const { user } = useApplicationContext();
+  const { user } = useUserContext();
 
   return useMutation<PredictionResponse, ApiError, StrokePredictionRequest>({
     mutationKey: ['strokePrediction'],

@@ -97,3 +97,50 @@ export type UpdateUserRequest = {
   firstName: string;
   lastName: string;
 };
+
+export type StrokePredictionRecord = {
+  id: number;
+  age: number;
+  sex: number;
+  hypertension: number;
+  heartDisease: number;
+  workType: number;
+  avgGlucoseLevel: number;
+  bmi: number;
+  predictionProbability: number;
+  recommendations: string;
+  createdAt: Date;
+};
+
+export type DiabetesPredictionRecord = {
+  id: number;
+  hba1cLevel: number;
+  bloodGlucoseLevel: number;
+  bmi: number;
+  age: number;
+  smokingHistory: number;
+  predictionProbability: number;
+  recommendations: string;
+  createdAt: Date;
+};
+
+export type HeartAttackPredictionRecord = {
+  id: number;
+  age: number;
+  sex: number;
+  cp: number;
+  trestbps: number;
+  chol: number;
+  thalach: number;
+  oldpeak: number;
+  exang: number;
+  predictionProbability: number;
+  recommendations: string;
+  createdAt: Date;
+};
+
+export type PredictionHistoryResponse = {
+  strokePredictions: StrokePredictionRecord[];
+  diabetesPredictions: DiabetesPredictionRecord[];
+  heartAttackPredictions: HeartAttackPredictionRecord[];
+};

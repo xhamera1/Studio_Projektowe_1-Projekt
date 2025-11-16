@@ -25,7 +25,7 @@ export const UserContextProvider = ({ children }: Props) => {
   );
 };
 
-export const useApplicationContext = () => {
+export const useUserContext = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error(

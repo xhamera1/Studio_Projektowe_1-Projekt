@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useQuery } from '@tanstack/react-query';
-import { useApplicationContext } from '../contexts/UserContextProvider.tsx';
+import { useUserContext } from '../contexts/UserContextProvider.tsx';
 import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
 import type { ApiError, UserDemographics } from '../utils/types.ts';
 import { userDemographicsService } from '../services/userDemographicsService.ts';
@@ -16,7 +16,7 @@ import DeleteAccount from '../components/profile/DeleteAccount.tsx';
 const ERROR_NOT_FOUND = 404;
 
 const Account = () => {
-  const { user } = useApplicationContext();
+  const { user } = useUserContext();
   const { isAuthenticated, token } = useAuthenticationContext();
 
   const {

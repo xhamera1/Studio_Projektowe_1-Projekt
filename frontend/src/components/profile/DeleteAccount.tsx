@@ -16,12 +16,12 @@ import ErrorAlert from '../common/ErrorAlert.tsx';
 import { userService } from '../../services/userService.ts';
 import type { ApiError } from '../../utils/types.ts';
 import useAuthenticationContext from '../../contexts/AuthenticationContextProvider.tsx';
-import { useApplicationContext } from '../../contexts/UserContextProvider.tsx';
+import { useUserContext } from '../../contexts/UserContextProvider.tsx';
 
 const DeleteAccount = () => {
   const [open, setOpen] = useState(false);
   const { token, clearAuthentication } = useAuthenticationContext();
-  const { user, setUser } = useApplicationContext();
+  const { user, setUser } = useUserContext();
   const navigate = useNavigate();
 
   const { mutate: deleteUser, error } = useMutation<void, ApiError, void>({

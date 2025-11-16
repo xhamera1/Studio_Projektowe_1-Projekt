@@ -179,7 +179,7 @@ const HeartAttack = () => {
                 ))}
               </TextField>
               <TextField
-                label="Resting Blood Pressure (trestbps)"
+                label="Resting Blood Pressure"
                 placeholder={'e.g., 120 (in mm Hg)'}
                 type="number"
                 inputProps={{ inputMode: 'numeric', step: 1 }}
@@ -197,7 +197,7 @@ const HeartAttack = () => {
                 fullWidth
               />
               <TextField
-                label="Serum Cholesterol (mg/dl)"
+                label="Serum Cholesterol"
                 placeholder={'e.g., 240 (in mg/dl)'}
                 type="number"
                 inputProps={{ inputMode: 'numeric', step: 1 }}
@@ -233,7 +233,7 @@ const HeartAttack = () => {
                 fullWidth
               />
               <TextField
-                label="ST Depression (oldpeak)"
+                label="ST Depression"
                 placeholder={'e.g., 1.2'}
                 type="number"
                 inputProps={{ step: 0.1 }}

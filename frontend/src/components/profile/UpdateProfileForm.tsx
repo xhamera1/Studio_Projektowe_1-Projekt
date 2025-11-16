@@ -12,7 +12,7 @@ import { Alert } from '@mui/material';
 import ErrorAlert from '../common/ErrorAlert.tsx';
 import { userService } from '../../services/userService.ts';
 import type { ApiError, UpdateUserRequest, User } from '../../utils/types.ts';
-import { useApplicationContext } from '../../contexts/UserContextProvider.tsx';
+import { useUserContext } from '../../contexts/UserContextProvider.tsx';
 import useAuthenticationContext from '../../contexts/AuthenticationContextProvider.tsx';
 
 type FormValues = UpdateUserRequest;
@@ -23,7 +23,7 @@ type Props = {
 
 const UpdateProfileForm = ({ user }: Props) => {
   const { isAuthenticated, token } = useAuthenticationContext();
-  const { setUser } = useApplicationContext();
+  const { setUser } = useUserContext();
   const queryClient = useQueryClient();
 
   const {
