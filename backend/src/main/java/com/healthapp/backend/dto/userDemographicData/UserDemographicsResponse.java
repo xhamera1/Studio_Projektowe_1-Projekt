@@ -1,13 +1,13 @@
 package com.healthapp.backend.dto.userDemographicData;
 
-import com.healthapp.backend.model.UserDemographicData;
+import com.healthapp.backend.model.UserDemographics;
 import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
-public record UserDemographicDataResponse(
+public record UserDemographicsResponse(
         Integer sex,
         LocalDate dateOfBirth,
         Float weight,
@@ -16,8 +16,8 @@ public record UserDemographicDataResponse(
         LocalDateTime updatedAt
 ) {
 
-    public static UserDemographicDataResponse createUserDemographicDataResponseFrom(UserDemographicData demographicData) {
-        return UserDemographicDataResponse.builder()
+    public static UserDemographicsResponse createUserDemographicsResponseFrom(UserDemographics demographicData) {
+        return UserDemographicsResponse.builder()
                 .sex(demographicData.getSex())
                 .dateOfBirth(demographicData.getDateOfBirth())
                 .weight(demographicData.getWeight())

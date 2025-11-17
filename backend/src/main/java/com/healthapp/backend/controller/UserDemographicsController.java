@@ -2,8 +2,8 @@ package com.healthapp.backend.controller;
 
 import com.healthapp.backend.annotation.IsOwnerOrAdmin;
 import com.healthapp.backend.dto.userDemographicData.UserDemographicDataRequest;
-import com.healthapp.backend.dto.userDemographicData.UserDemographicDataResponse;
-import com.healthapp.backend.service.UserDemographicDataService;
+import com.healthapp.backend.dto.userDemographicData.UserDemographicsResponse;
+import com.healthapp.backend.service.UserDemographicsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,28 +21,28 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/api/users/demographics")
 @Slf4j
 @RequiredArgsConstructor
-public class UserDemographicDataController {
+public class UserDemographicsController {
 
-    private final UserDemographicDataService userDemographicDataService;
+    private final UserDemographicsService userDemographicsService;
 
     @PostMapping(value = "/{userId}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @IsOwnerOrAdmin
-    public UserDemographicDataResponse createUserDemographicData(@PathVariable Long userId, @RequestBody @Valid UserDemographicDataRequest request) {
+    public UserDemographicsResponse createUserDemographics(@PathVariable Long userId, @RequestBody @Valid UserDemographicDataRequest request) {
         log.info("Received create demographic data request for user ID {}: {}", userId, request);
-        return userDemographicDataService.saveDemographicDataFor(request, userId);
+        return userDemographicsService.saveDemographicsFor(request, userId);
     }
 
     @PutMapping(value = "/{userId}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @IsOwnerOrAdmin
-    public UserDemographicDataResponse updateUserDemographicData(@PathVariable Long userId, @RequestBody @Valid UserDemographicDataRequest request) {
+    public UserDemographicsResponse updateUserDemographics(@PathVariable Long userId, @RequestBody @Valid UserDemographicDataRequest request) {
         log.info("Received update demographic data request for user ID {}: {}", userId, request);
-        return userDemographicDataService.updateDemographicDataFor(request, userId);
+        return userDemographicsService.updateDemographicsFor(request, userId);
     }
 
     @GetMapping(value = "/{userId}", produces = APPLICATION_JSON_VALUE)
     @IsOwnerOrAdmin
-    public UserDemographicDataResponse getUserDemographicData(@PathVariable Long userId) {
+    public UserDemographicsResponse getUserDemographics(@PathVariable Long userId) {
         log.info("Received get demographic data request for user ID {}", userId);
-        return userDemographicDataService.getDemographicDataFor(userId);
+        return userDemographicsService.getDemographicsFor(userId);
     }
 }

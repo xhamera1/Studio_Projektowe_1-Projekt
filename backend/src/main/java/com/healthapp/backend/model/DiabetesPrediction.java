@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DiabetesData {
+public class DiabetesPrediction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,13 +67,13 @@ public class DiabetesData {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public static DiabetesData createDiabetesDataFrom(
+    public static DiabetesPrediction createDiabetesPredictionFrom(
             DiabetesPredictionRequest request,
             HealthPredictionServiceResponse prediction,
             User user,
             String recommendation
     ) {
-        return DiabetesData.builder()
+        return DiabetesPrediction.builder()
                 .user(user)
                 .hba1cLevel(request.hba1cLevel())
                 .bloodGlucoseLevel(request.bloodGlucoseLevel())

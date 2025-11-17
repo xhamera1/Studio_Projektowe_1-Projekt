@@ -1,6 +1,6 @@
 package com.healthapp.backend.dto.predictionHistory;
 
-import com.healthapp.backend.model.HeartAttackData;
+import com.healthapp.backend.model.HeartAttackPrediction;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class HeartAttackPredictionHistoryDto {
+public class HeartAttackPredictionResponse {
     private Long id;
     private Integer age;
     private Integer sex;
@@ -22,8 +22,8 @@ public class HeartAttackPredictionHistoryDto {
     private String recommendations;
     private LocalDateTime createdAt;
 
-    public static HeartAttackPredictionHistoryDto createFrom(HeartAttackData data) {
-        return HeartAttackPredictionHistoryDto.builder()
+    public static HeartAttackPredictionResponse createHeartAttackPredictionResponseFrom(HeartAttackPrediction data) {
+        return HeartAttackPredictionResponse.builder()
                 .id(data.getId())
                 .age(data.getAge())
                 .sex(data.getSex())

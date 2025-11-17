@@ -1,6 +1,16 @@
 // src/components/prediction-history/PredictionHistoryItem.tsx
-import { Chip, ListItemButton, ListItemIcon, ListItemText, Stack } from '@mui/material';
-import type { DiabetesPredictionRecord, HeartAttackPredictionRecord, StrokePredictionRecord } from '../../utils/types';
+import {
+  Chip,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Stack
+} from '@mui/material';
+import type {
+  DiabetesPredictionRecord,
+  HeartAttackPredictionRecord,
+  StrokePredictionRecord
+} from '../../utils/types';
 import type { PredictionType } from '../../pages/PredictionHistory';
 import { formatDateTime, formatProbability } from '../../utils/formatters.ts';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';

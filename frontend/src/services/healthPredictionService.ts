@@ -1,18 +1,20 @@
 import type {
+  DiabetesPredictionRecord,
   DiabetesPredictionRequest,
+  HeartAttackPredictionRecord,
   HeartAttackPredictionRequest,
-  PredictionResponse,
+  StrokePredictionRecord,
   StrokePredictionRequest
 } from '../utils/types.ts';
 import { ENDPOINTS } from '../config/api.ts';
 import { handleResponse } from '../utils/functions.ts';
 
-const postPrediction = async <T>(
+const postPrediction = async <T, D>(
   endpoint: string,
   request: T,
   userId: number,
   token: string
-): Promise<PredictionResponse> => {
+): Promise<D> => {
   return fetch(`${endpoint}/${userId}`, {
     method: 'POST',
     headers: {
@@ -21,7 +23,7 @@ const postPrediction = async <T>(
       Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(request)
-  }).then(handleResponse<PredictionResponse>);
+  }).then(handleResponse<D>);
 };
 
 export const healthPredictionService = {
@@ -29,21 +31,21 @@ export const healthPredictionService = {
     request: DiabetesPredictionRequest,
     userId: number,
     token: string
-  ): Promise<PredictionResponse> =>
+  ): Promise<DiabetesPredictionRecord> =>
     postPrediction(`${ENDPOINTS.PREDICTIONS}/diabetes`, request, userId, token),
 
   predictStroke: (
     request: StrokePredictionRequest,
     userId: number,
     token: string
-  ): Promise<PredictionResponse> =>
+  ): Promise<StrokePredictionRecord> =>
     postPrediction(`${ENDPOINTS.PREDICTIONS}/stroke`, request, userId, token),
 
   predictHeartAttack: (
     request: HeartAttackPredictionRequest,
     userId: number,
     token: string
-  ): Promise<PredictionResponse> =>
+  ): Promise<HeartAttackPredictionRecord> =>
     postPrediction(
       `${ENDPOINTS.PREDICTIONS}/heart-attack`,
       request,

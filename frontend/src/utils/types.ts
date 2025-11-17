@@ -33,11 +33,6 @@ export type ApiError = {
   errors?: Record<string, string>;
 };
 
-export type PredictionResponse = {
-  probability: number;
-  recommendations: string;
-};
-
 export type DiabetesPredictionRequest = {
   hba1cLevel: number;
   bloodGlucoseLevel: number;

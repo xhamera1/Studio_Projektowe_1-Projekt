@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HeartAttackData {
+public class HeartAttackPrediction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,13 +76,13 @@ public class HeartAttackData {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public static HeartAttackData createHeartAttackDataFrom(
+    public static HeartAttackPrediction createHeartAttackPredictionFrom(
             HeartAttackPredictionRequest request,
             HealthPredictionServiceResponse prediction,
             User user,
             String recommendations
     ) {
-        return HeartAttackData.builder()
+        return HeartAttackPrediction.builder()
                 .user(user)
                 .age(request.age())
                 .sex(request.sex())
