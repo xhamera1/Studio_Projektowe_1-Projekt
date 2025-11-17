@@ -12,8 +12,7 @@ import { Alert } from '@mui/material';
 import ErrorAlert from '../common/ErrorAlert.tsx';
 import { userService } from '../../services/userService.ts';
 import type { ApiError, UpdateUserRequest, User } from '../../utils/types.ts';
-import { useUserContext } from '../../contexts/UserContextProvider.tsx';
-import useAuthenticationContext from '../../contexts/AuthenticationContextProvider.tsx';
+import { useApplicationContext } from '../../contexts/ApplicationContextProvider.tsx';
 
 type FormValues = UpdateUserRequest;
 
@@ -22,8 +21,8 @@ type Props = {
 };
 
 const UpdateProfileForm = ({ user }: Props) => {
-  const { isAuthenticated, token } = useAuthenticationContext();
-  const { setUser } = useUserContext();
+  const { isUserAuthenticated, accessToken } = useApplicationContext();
+  const { setUser } = useApplicationContext();
   const queryClient = useQueryClient();
 
   const {
@@ -55,10 +54,10 @@ const UpdateProfileForm = ({ user }: Props) => {
     error
   } = useMutation<User, ApiError, UpdateUserRequest>({
     mutationFn: (request: UpdateUserRequest) => {
-      if (!isAuthenticated || !user) {
+      if (!isUserAuthenticated || !user) {
         throw new Error('User not authenticated');
       }
-      const tokenValue = token!.value;
+      const tokenValue = accessToken!.value;
       const userId = user.id;
       return userService.updateUser(request, userId, tokenValue);
     },

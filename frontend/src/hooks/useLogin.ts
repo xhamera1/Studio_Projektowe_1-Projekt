@@ -1,13 +1,12 @@
-import { useAuthenticationContext } from '../contexts/AuthenticationContextProvider.tsx';
-import { useUserContext } from '../contexts/UserContextProvider.tsx';
+import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import type { ApiError, LoginRequest, LoginResponse } from '../utils/types.ts';
 import { authenticationService } from '../services/authenticationService.ts';
 
 export const useLogin = () => {
-  const { saveAuthentication } = useAuthenticationContext();
-  const { setUser } = useUserContext();
+  const { saveAuthentication } = useApplicationContext();
+  const { setUser } = useApplicationContext();
   const navigate = useNavigate();
 
   return useMutation<LoginResponse, ApiError, LoginRequest>({

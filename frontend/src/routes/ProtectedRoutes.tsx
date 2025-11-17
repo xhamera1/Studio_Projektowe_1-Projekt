@@ -1,9 +1,9 @@
-import { useAuthenticationContext } from '../contexts/AuthenticationContextProvider.tsx';
 import { Navigate, Outlet } from 'react-router-dom';
+import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 
 const ProtectedRoutes = () => {
-  const { isAuthenticated } = useAuthenticationContext();
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  const { isUserAuthenticated } = useApplicationContext();
+  return isUserAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoutes;

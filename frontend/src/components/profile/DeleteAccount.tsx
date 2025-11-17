@@ -15,26 +15,24 @@ import { useMutation } from '@tanstack/react-query';
 import ErrorAlert from '../common/ErrorAlert.tsx';
 import { userService } from '../../services/userService.ts';
 import type { ApiError } from '../../utils/types.ts';
-import useAuthenticationContext from '../../contexts/AuthenticationContextProvider.tsx';
-import { useUserContext } from '../../contexts/UserContextProvider.tsx';
+import { useApplicationContext } from '../../contexts/ApplicationContextProvider.tsx';
 
 const DeleteAccount = () => {
   const [open, setOpen] = useState(false);
-  const { token, clearAuthentication } = useAuthenticationContext();
-  const { user, setUser } = useUserContext();
+  const { user, setUser, accessToken, saveAuthentication } = useApplicationContext();
   const navigate = useNavigate();
 
   const { mutate: deleteUser, error } = useMutation<void, ApiError, void>({
     mutationFn: () => {
-      if (!user || !token) {
+      if (!user || !accessToken) {
         throw new Error('User not authenticated');
       }
-      return userService.deleteUser(user.id, token.value);
+      return userService.deleteUser(user.id, accessToken.value);
     },
     onSuccess: () => {
       console.log('User account deleted successfully');
       setUser(null);
-      clearAuthentication();
+      saveAuthentication(null);
       navigate('/login');
     }
   });

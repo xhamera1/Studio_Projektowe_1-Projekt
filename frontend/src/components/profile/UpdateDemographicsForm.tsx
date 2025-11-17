@@ -14,9 +14,9 @@ import type {
   UserDemographics,
   UserDemographicsRequest
 } from '../../utils/types.ts';
-import useAuthenticationContext from '../../contexts/AuthenticationContextProvider.tsx';
 import { userDemographicsService } from '../../services/userDemographicsService.ts';
 import ErrorAlert from '../common/ErrorAlert.tsx';
+import { useApplicationContext } from '../../contexts/ApplicationContextProvider.tsx';
 
 const sexOptions = ['Female', 'Male'] as const;
 
@@ -37,7 +37,7 @@ const formatDateForInput = (date: Date): string => {
 };
 
 const UpdateDemographicsForm = ({ userId, demographics }: Props) => {
-  const { token } = useAuthenticationContext();
+  const { accessToken } = useApplicationContext();
   const queryClient = useQueryClient();
   const dataExists = demographics != null;
 
@@ -66,18 +66,18 @@ const UpdateDemographicsForm = ({ userId, demographics }: Props) => {
     error
   } = useMutation<UserDemographics, ApiError, UserDemographicsRequest>({
     mutationFn: (request: UserDemographicsRequest) => {
-      if (!token) throw new Error('Not authenticated');
+      if (!accessToken) throw new Error('Not authenticated');
       if (dataExists) {
         return userDemographicsService.updateUserDemographics(
           request,
           userId,
-          token.value
+          accessToken.value
         );
       } else {
         return userDemographicsService.addUserDemographics(
           request,
           userId,
-          token.value
+          accessToken.value
         );
       }
     },

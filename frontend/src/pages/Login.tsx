@@ -1,16 +1,16 @@
 import { Link as RouterLink, Navigate } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
 import LoginForm from '../components/login/LoginForm.tsx';
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 
 export default function Login() {
-  const { isAuthenticated } = useAuthenticationContext();
+  const { isUserAuthenticated } = useApplicationContext();
 
-  if (isAuthenticated) {
+  if (isUserAuthenticated) {
     return <Navigate to="/" replace />;
   }
 

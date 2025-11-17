@@ -1,11 +1,23 @@
 // src/components/prediction-history/PredictionDetailsDialog.tsx
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Typography
+} from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import StrokePredictionDetails from './StrokePredictionDetails';
 import DiabetesPredictionDetails from './DiabetesPredictionDetails';
 import HeartAttackPredictionDetails from './HeartAttackPredictionDetails';
 import { formatDateTime, formatProbability } from '../../utils/formatters.ts';
-import type { PredictionType, SelectedPrediction } from '../../pages/PredictionHistory.tsx';
+import type {
+  PredictionType,
+  SelectedPrediction
+} from '../../pages/PredictionHistory.tsx';
 
 const predictionTypeLabel: Record<PredictionType, string> = {
   stroke: 'Stroke prediction',

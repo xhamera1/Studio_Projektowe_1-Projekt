@@ -1,24 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ApiError, PredictionHistoryResponse } from '../utils/types.ts';
-import { useUserContext } from '../contexts/UserContextProvider.tsx';
-import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
+import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 import { predictionHistoryService } from '../services/predictionHistoryService.ts';
 
 export const usePredictionHistory = () => {
-  const { user } = useUserContext();
-  const { isAuthenticated, token } = useAuthenticationContext();
+  const { user } = useApplicationContext();
+  const { isUserAuthenticated, accessToken } = useApplicationContext();
 
   return useQuery<PredictionHistoryResponse, ApiError>({
     queryKey: ['predictionHistory'],
     queryFn: () => {
-      if (!user || !isAuthenticated) {
+      if (!user || !isUserAuthenticated) {
         throw new Error('User is not authenticated');
       }
       return predictionHistoryService.getPredictionHistory(
         user.id,
-        token!.value
+        accessToken!.value
       );
     },
-    enabled: !!user && isAuthenticated
+    enabled: !!user && isUserAuthenticated
   });
 };

@@ -1,27 +1,26 @@
 import { useMutation } from '@tanstack/react-query';
-import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
 import { healthPredictionService } from '../services/healthPredictionService.ts';
 import type {
   ApiError,
   DiabetesPredictionRequest,
   PredictionResponse
 } from '../utils/types.ts';
-import { useUserContext } from '../contexts/UserContextProvider.tsx';
+import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 
 export const useDiabetesPrediction = () => {
-  const { isAuthenticated, token } = useAuthenticationContext();
-  const { user } = useUserContext();
+  const { isUserAuthenticated, accessToken } = useApplicationContext();
+  const { user } = useApplicationContext();
 
   return useMutation<PredictionResponse, ApiError, DiabetesPredictionRequest>({
     mutationKey: ['diabetesPrediction'],
     mutationFn: async (request: DiabetesPredictionRequest) => {
-      if (!isAuthenticated || !user) {
+      if (!isUserAuthenticated || !user) {
         throw new Error('User is not authenticated');
       }
       return healthPredictionService.predictDiabetes(
         request,
         user.id,
-        token!.value
+        accessToken!.value
       );
     }
   });

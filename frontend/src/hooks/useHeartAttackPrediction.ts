@@ -4,13 +4,12 @@ import type {
   HeartAttackPredictionRequest,
   PredictionResponse
 } from '../utils/types.ts';
-import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
 import { healthPredictionService } from '../services/healthPredictionService.ts';
-import { useUserContext } from '../contexts/UserContextProvider.tsx';
+import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 
 export const useHeartAttackPrediction = () => {
-  const { isAuthenticated, token } = useAuthenticationContext();
-  const { user } = useUserContext();
+  const { isUserAuthenticated, accessToken } = useApplicationContext();
+  const { user } = useApplicationContext();
 
   return useMutation<
     PredictionResponse,
@@ -19,13 +18,13 @@ export const useHeartAttackPrediction = () => {
   >({
     mutationKey: ['heartAttackPrediction'],
     mutationFn: async (request: HeartAttackPredictionRequest) => {
-      if (!isAuthenticated || !user) {
+      if (!isUserAuthenticated || !user) {
         throw new Error('User is not authenticated');
       }
       return healthPredictionService.predictHeartAttack(
         request,
         user.id,
-        token!.value
+        accessToken!.value
       );
     }
   });

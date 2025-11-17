@@ -8,8 +8,7 @@ import {
   Paper,
   Typography
 } from '@mui/material';
-import { useUserContext } from '../contexts/UserContextProvider.tsx';
-import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
+import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 import type {
   DiabetesPredictionRecord,
   HeartAttackPredictionRecord,
@@ -34,8 +33,8 @@ export type UnifiedPredictionItem =
   | { type: 'heartAttack'; record: HeartAttackPredictionRecord };
 
 const PredictionHistoryPage = () => {
-  const { user } = useUserContext();
-  const jwtToken = useAuthenticationContext();
+  const { user } = useApplicationContext();
+  const { isUserAuthenticated } = useApplicationContext();
 
   const [selectedPrediction, setSelectedPrediction] =
     useState<SelectedPrediction>(null);
@@ -75,7 +74,7 @@ const PredictionHistoryPage = () => {
     );
   }, [predictions]);
 
-  if (!user || !jwtToken) {
+  if (!isUserAuthenticated || !user) {
     return;
   }
 

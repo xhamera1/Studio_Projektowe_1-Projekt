@@ -4,8 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useQuery } from '@tanstack/react-query';
-import { useUserContext } from '../contexts/UserContextProvider.tsx';
-import useAuthenticationContext from '../contexts/AuthenticationContextProvider.tsx';
+import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 import type { ApiError, UserDemographics } from '../utils/types.ts';
 import { userDemographicsService } from '../services/userDemographicsService.ts';
 import ErrorAlert from '../components/common/ErrorAlert.tsx';
@@ -16,8 +15,7 @@ import DeleteAccount from '../components/profile/DeleteAccount.tsx';
 const ERROR_NOT_FOUND = 404;
 
 const Account = () => {
-  const { user } = useUserContext();
-  const { isAuthenticated, token } = useAuthenticationContext();
+  const { user, isUserAuthenticated, accessToken } = useApplicationContext();
 
   const {
     data: demographics,
@@ -26,12 +24,12 @@ const Account = () => {
   } = useQuery<UserDemographics, ApiError>({
     queryKey: ['userDemographics', user?.id],
     queryFn: () => {
-      if (!isAuthenticated || !user) {
+      if (!isUserAuthenticated || !user) {
         throw new Error('User or token not available');
       }
-      return userDemographicsService.getUserDemographics(user.id, token!.value);
+      return userDemographicsService.getUserDemographics(user.id, accessToken!.value);
     },
-    enabled: !!user && !!token,
+    enabled: !!user && !!accessToken,
     retry: (failureCount, err) => {
       if (err.status === ERROR_NOT_FOUND) {
         return false;
