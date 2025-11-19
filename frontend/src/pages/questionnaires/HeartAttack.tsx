@@ -139,8 +139,9 @@ const HeartAttack = () => {
                   validate: value =>
                     (typeof value === 'number' &&
                       Number.isFinite(value) &&
-                      value >= 1) ||
-                    'Please enter an age of 1 or older.'
+                      value >= 1 &&
+                      value <= 120) ||
+                    'Please enter an age between 1 and 120.'
                 })}
                 error={!!errors.age}
                 helperText={errors.age ? errors.age.message : ' '}
@@ -189,8 +190,9 @@ const HeartAttack = () => {
                   validate: value =>
                     (typeof value === 'number' &&
                       Number.isFinite(value) &&
-                      value > 0) ||
-                    'Please enter a value greater than 0.'
+                      value >= 50 &&
+                      value <= 250) ||
+                    'Please enter a value between 50 and 250.'
                 })}
                 error={!!errors.trestbps}
                 helperText={errors.trestbps ? errors.trestbps.message : ' '}
@@ -207,8 +209,9 @@ const HeartAttack = () => {
                   validate: value =>
                     (typeof value === 'number' &&
                       Number.isFinite(value) &&
-                      value > 0) ||
-                    'Please enter a value greater than 0.'
+                      value >= 100 &&
+                      value <= 600) ||
+                    'Please enter a value between 100 and 600.'
                 })}
                 error={!!errors.chol}
                 helperText={errors.chol ? errors.chol.message : ' '}
@@ -225,8 +228,9 @@ const HeartAttack = () => {
                   validate: value =>
                     (typeof value === 'number' &&
                       Number.isFinite(value) &&
-                      value > 0) ||
-                    'Please enter a value greater than 0.'
+                      value >= 30 &&
+                      value <= 220) ||
+                    'Please enter a value between 30 and 220.'
                 })}
                 error={!!errors.thalach}
                 helperText={errors.thalach ? errors.thalach.message : ' '}
@@ -243,8 +247,9 @@ const HeartAttack = () => {
                   validate: value =>
                     (typeof value === 'number' &&
                       Number.isFinite(value) &&
-                      value >= 0) ||
-                    'Please enter a value of 0 or higher.'
+                      value >= 0 &&
+                      value <= 10) ||
+                    'Please enter a value between 0 and 10.'
                 })}
                 error={!!errors.oldpeak}
                 helperText={errors.oldpeak ? errors.oldpeak.message : ' '}

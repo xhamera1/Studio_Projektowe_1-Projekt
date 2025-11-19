@@ -137,8 +137,9 @@ const Stroke = () => {
                   validate: value =>
                     (typeof value === 'number' &&
                       Number.isFinite(value) &&
-                      value >= 1) ||
-                    'Please enter an age of 1 or older.'
+                      value >= 1 &&
+                      value <= 120) ||
+                    'Please enter an age between 1 and 120.'
                 })}
                 error={!!errors.age}
                 helperText={errors.age ? errors.age.message : ' '}
@@ -156,8 +157,9 @@ const Stroke = () => {
                   validate: value =>
                     (typeof value === 'number' &&
                       Number.isFinite(value) &&
-                      value >= 1) ||
-                    'Please enter a height of 1 cm or more.'
+                      value >= 50 &&
+                      value <= 300) ||
+                    'Please enter a height between 50 and 300 cm.'
                 })}
                 error={!!errors.height}
                 helperText={errors.height ? errors.height.message : ' '}
@@ -175,8 +177,9 @@ const Stroke = () => {
                   validate: value =>
                     (typeof value === 'number' &&
                       Number.isFinite(value) &&
-                      value >= 0.1) ||
-                    'Please enter a weight of 0.1 kg or more.'
+                      value >= 30 &&
+                      value <= 400) ||
+                    'Please enter a weight between 30 and 400 kg.'
                 })}
                 error={!!errors.weight}
                 helperText={errors.weight ? errors.weight.message : ' '}
@@ -268,8 +271,9 @@ const Stroke = () => {
                   validate: value =>
                     (typeof value === 'number' &&
                       Number.isFinite(value) &&
-                      value > 0) ||
-                    'Please enter a value greater than 0.'
+                      value >= 20 &&
+                      value <= 500) ||
+                    'Please enter a value between 20 and 500.'
                 })}
                 error={!!errors.avg_glucose_level}
                 helperText={

@@ -1,5 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import type { ApiError, HeartAttackPredictionRecord, HeartAttackPredictionRequest } from '../utils/types.ts';
+import type {
+  ApiError,
+  HeartAttackPredictionRecord,
+  HeartAttackPredictionRequest
+} from '../utils/types.ts';
 import { healthPredictionService } from '../services/healthPredictionService.ts';
 import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 
