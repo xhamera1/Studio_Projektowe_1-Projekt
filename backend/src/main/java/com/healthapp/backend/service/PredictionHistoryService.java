@@ -1,10 +1,12 @@
 package com.healthapp.backend.service;
 
+import com.healthapp.backend.dto.prediction.HabitsPredictionResponse;
 import com.healthapp.backend.dto.predictionHistory.DiabetesPredictionResponse;
 import com.healthapp.backend.dto.predictionHistory.HeartAttackPredictionResponse;
 import com.healthapp.backend.dto.predictionHistory.PredictionHistoryResponse;
 import com.healthapp.backend.dto.predictionHistory.StrokePredictionResponse;
 import com.healthapp.backend.repository.DiabetesRepository;
+import com.healthapp.backend.repository.HabitAssessmentRepository;
 import com.healthapp.backend.repository.HeartAttackRepository;
 import com.healthapp.backend.repository.StrokeRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class PredictionHistoryService {
     private final HeartAttackRepository heartAttackRepository;
     private final DiabetesRepository diabetesRepository;
     private final StrokeRepository strokeRepository;
+    private final HabitAssessmentRepository habitAssessmentRepository;
 
     @Transactional(readOnly = true)
     public PredictionHistoryResponse getPredictionHistoryFor(Long userId) {
@@ -33,11 +36,16 @@ public class PredictionHistoryService {
                 .stream()
                 .map(StrokePredictionResponse::createStrokePredictionResponseFrom)
                 .toList();
+        var habitsHistory = habitAssessmentRepository.findByUserId(userId)
+                .stream()
+                .map(HabitsPredictionResponse::from)
+                .toList();
 
         return new PredictionHistoryResponse(
                 strokePredictionHistory,
                 diabetesPredictionHistory,
-                heartAttackPredictionHistory
+                heartAttackPredictionHistory,
+                habitsHistory
         );
     }
 }

@@ -1,4 +1,6 @@
-import { useForm } from 'react-hook-form';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { useQueryClient } from '@tanstack/react-query';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -9,6 +11,12 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { useStrokePrediction } from '../../hooks/useStrokePrediction.ts';
 import ErrorAlert from '../../components/common/ErrorAlert.tsx';
+import PredictionDetailsDialog from '../../components/predictionHistory/PredictionDetailsDialog.tsx';
+import type { SelectedPrediction } from '../../utils/types.ts';
+import { useApplicationContext } from '../../contexts/ApplicationContextProvider.tsx';
+import { useUserDemographicsQuery } from '../../hooks/useUserDemographicsQuery.ts';
+import { calculateAgeFromDateOfBirth } from '../../utils/profile.ts';
+import { useLocalStorage } from 'usehooks-ts';
 
 export const sexOptions = ['female', 'male'] as const;
 
@@ -47,15 +55,45 @@ const DEFAULT_FORM_VALUES = {
 };
 
 const Stroke = () => {
+  const { user } = useApplicationContext();
+  const { data: demographics } = useUserDemographicsQuery();
+  const [storedValues, setStoredValues] = useLocalStorage<FormValues | null>(
+    `stroke-form-${user?.id ?? 'guest'}`,
+    null
+  );
+  const derivedDefaults = useMemo<FormValues>(() => {
+    if (storedValues) {
+      return storedValues;
+    }
+    if (demographics) {
+      return {
+        ...DEFAULT_FORM_VALUES,
+        age: calculateAgeFromDateOfBirth(demographics.dateOfBirth),
+        height: demographics.height ?? null,
+        weight: demographics.weight ?? null,
+        sex: demographics.sex === 1 ? sexOptions[1] : sexOptions[0]
+      };
+    }
+    return { ...DEFAULT_FORM_VALUES };
+  }, [storedValues, demographics]);
+  const queryClient = useQueryClient();
   const { mutate: predict, isPending, isError, error } = useStrokePrediction();
+  const [predictionResult, setPredictionResult] =
+    useState<SelectedPrediction>(null);
   const {
     register,
     handleSubmit,
+    reset,
+    control,
     formState: { errors, isValid }
   } = useForm<FormValues>({
     mode: 'onChange',
-    defaultValues: DEFAULT_FORM_VALUES
+    defaultValues: derivedDefaults
   });
+
+  useEffect(() => {
+    reset(derivedDefaults);
+  }, [derivedDefaults, reset]);
 
   const computeBmi = (height: number | null, weight: number | null) => {
     if (!height || !weight) return 0;
@@ -66,15 +104,31 @@ const Stroke = () => {
   const onSubmit = (data: FormValues) => {
     const bmi = computeBmi(data.height, data.weight);
 
-    predict({
-      age: data.age!,
-      sex: sexOptions.indexOf(data.sex),
-      hypertension: hypertensionOptions.indexOf(data.hypertension),
-      heartDisease: heartDiseaseOptions.indexOf(data.heart_disease),
-      workType: workTypeOptions.indexOf(data.work_type),
-      avgGlucoseLevel: data.avg_glucose_level!,
-      bmi: Number(bmi.toFixed(2))
-    });
+    setPredictionResult(null);
+
+    const formSnapshot: FormValues = { ...data };
+
+    predict(
+      {
+        age: data.age!,
+        sex: sexOptions.indexOf(data.sex),
+        hypertension: hypertensionOptions.indexOf(data.hypertension),
+        heartDisease: heartDiseaseOptions.indexOf(data.heart_disease),
+        workType: workTypeOptions.indexOf(data.work_type),
+        avgGlucoseLevel: data.avg_glucose_level!,
+        bmi: Number(bmi.toFixed(2))
+      },
+      {
+        onSuccess: record => {
+          setStoredValues(formSnapshot);
+          setPredictionResult({
+            type: 'stroke',
+            record
+          });
+          queryClient.invalidateQueries({ queryKey: ['predictionHistory'] });
+        }
+      }
+    );
   };
 
   return (
@@ -186,26 +240,31 @@ const Stroke = () => {
                 fullWidth
               />
 
-              <TextField
-                label="Sex"
-                select
-                defaultValue={sexOptions[0]}
-                {...register('sex', { required: 'Please select a sex.' })}
-                error={!!errors.sex}
-                helperText={errors.sex ? errors.sex.message : ' '}
-                fullWidth
-              >
-                {sexOptions.map(opt => (
-                  <MenuItem key={opt} value={opt}>
-                    {opt}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <Controller
+                name="sex"
+                control={control}
+                rules={{ required: 'Please select a sex.' }}
+                render={({ field }) => (
+                  <TextField
+                    label="Sex"
+                    select
+                    {...field}
+                    error={!!errors.sex}
+                    helperText={errors.sex ? errors.sex.message : ' '}
+                    fullWidth
+                  >
+                    {sexOptions.map(opt => (
+                      <MenuItem key={opt} value={opt}>
+                        {opt}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
 
               <TextField
                 label="Hypertension"
                 select
-                defaultValue={hypertensionOptions[0]}
                 {...register('hypertension', {
                   required: 'Please select an option.'
                 })}
@@ -225,7 +284,6 @@ const Stroke = () => {
               <TextField
                 label="Heart Disease"
                 select
-                defaultValue={heartDiseaseOptions[0]}
                 {...register('heart_disease', {
                   required: 'Please select an option.'
                 })}
@@ -245,7 +303,6 @@ const Stroke = () => {
               <TextField
                 label="Work Type"
                 select
-                defaultValue={workTypeOptions[0]}
                 {...register('work_type', {
                   required: 'Please select a work type.'
                 })}
@@ -296,6 +353,11 @@ const Stroke = () => {
           </Box>
         </Card>
       </Container>
+      <PredictionDetailsDialog
+        open={!!predictionResult}
+        prediction={predictionResult}
+        onClose={() => setPredictionResult(null)}
+      />
     </>
   );
 };

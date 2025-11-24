@@ -11,7 +11,9 @@ import {
 import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 import type {
   DiabetesPredictionRecord,
+  HabitsAssessmentRecord,
   HeartAttackPredictionRecord,
+  SelectedPrediction,
   StrokePredictionRecord
 } from '../utils/types.ts';
 import { usePredictionHistory } from '../hooks/usePredictionHistory.ts';
@@ -19,18 +21,11 @@ import ErrorAlert from '../components/common/ErrorAlert.tsx';
 import PredictionHistoryItem from '../components/predictionHistory/PredictionHistoryItem.tsx';
 import PredictionDetailsDialog from '../components/predictionHistory/PredictionDetailsDialog.tsx';
 
-export type PredictionType = 'stroke' | 'diabetes' | 'heartAttack';
-
-export type SelectedPrediction =
-  | { type: 'stroke'; record: StrokePredictionRecord }
-  | { type: 'diabetes'; record: DiabetesPredictionRecord }
-  | { type: 'heartAttack'; record: HeartAttackPredictionRecord }
-  | null;
-
 export type UnifiedPredictionItem =
   | { type: 'stroke'; record: StrokePredictionRecord }
   | { type: 'diabetes'; record: DiabetesPredictionRecord }
-  | { type: 'heartAttack'; record: HeartAttackPredictionRecord };
+  | { type: 'heartAttack'; record: HeartAttackPredictionRecord }
+  | { type: 'habits'; record: HabitsAssessmentRecord };
 
 const PredictionHistoryPage = () => {
   const { user } = useApplicationContext();
@@ -67,7 +62,13 @@ const PredictionHistoryPage = () => {
         record
       }));
 
-    return [...strokeItems, ...diabetesItems, ...heartAttackItems].sort(
+    const habitsItems: UnifiedPredictionItem[] =
+      predictions.habitAssessments.map(record => ({
+        type: 'habits',
+        record
+      }));
+
+    return [...strokeItems, ...diabetesItems, ...heartAttackItems, ...habitsItems].sort(
       (a, b) =>
         new Date(b.record.createdAt).getTime() -
         new Date(a.record.createdAt).getTime()
@@ -111,7 +112,7 @@ const PredictionHistoryPage = () => {
         Prediction history
       </Typography>
       <Typography variant="body1" color="text.secondary" mb={3}>
-        All your predictions in one unified, time-ordered list.
+        Predictions and lifestyle assessments ordered from newest to oldest.
       </Typography>
 
       <Paper>

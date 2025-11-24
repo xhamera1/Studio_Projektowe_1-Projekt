@@ -18,10 +18,13 @@ import {
   Grain,
   History,
   Home,
-  MonitorHeart
+  Logout,
+  MonitorHeart,
+  Spa
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useThemeContext } from '../../contexts/ThemeContextProvider';
+import { useApplicationContext } from '../../contexts/ApplicationContextProvider';
 
 const drawerWidth = 240;
 
@@ -58,12 +61,24 @@ const predictionItems = [
     text: 'Stroke',
     icon: <Grain color={'error'} />,
     path: '/questionnaire/stroke'
+  },
+  {
+    text: 'Habits',
+    icon: <Spa color={'success'} />,
+    path: '/questionnaire/habits'
   }
 ];
 
 export const SideMenu = () => {
   const navigate = useNavigate();
   const { mode, toggleTheme } = useThemeContext();
+  const { setUser, saveAuthentication } = useApplicationContext();
+
+  const handleLogout = () => {
+    setUser(null);
+    saveAuthentication(null);
+    navigate('/login');
+  };
 
   return (
     <Drawer
@@ -120,6 +135,14 @@ export const SideMenu = () => {
         <Box sx={{ flexGrow: 1 }} />
 
         <List>
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleLogout} aria-label="Logout">
+              <ListItemIcon>
+                <Logout />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItemButton>
+          </ListItem>
           <ListItem disablePadding>
             <ListItemButton onClick={toggleTheme} aria-label="Toggle theme">
               <ListItemIcon>

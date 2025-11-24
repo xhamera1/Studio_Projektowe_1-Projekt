@@ -13,16 +13,22 @@ import ReactMarkdown from 'react-markdown';
 import StrokePredictionDetails from './StrokePredictionDetails';
 import DiabetesPredictionDetails from './DiabetesPredictionDetails';
 import HeartAttackPredictionDetails from './HeartAttackPredictionDetails';
-import { formatDateTime, formatProbability } from '../../utils/formatters.ts';
+import HabitsPredictionDetails from './HabitsPredictionDetails';
+import {
+  formatDateTime,
+  formatProbability,
+  formatWellnessScore
+} from '../../utils/formatters.ts';
 import type {
   PredictionType,
   SelectedPrediction
-} from '../../pages/PredictionHistory.tsx';
+} from '../../utils/types.ts';
 
 const predictionTypeLabel: Record<PredictionType, string> = {
   stroke: 'Stroke prediction',
   diabetes: 'Diabetes prediction',
-  heartAttack: 'Heart attack prediction'
+  heartAttack: 'Heart attack prediction',
+  habits: 'Lifestyle habits check'
 };
 
 type Props = {
@@ -37,6 +43,11 @@ const PredictionDetailsDialog = ({ open, prediction, onClose }: Props) => {
   }
 
   const { type, record } = prediction;
+  const hasProbability =
+    'predictionProbability' in record &&
+    typeof record.predictionProbability === 'number';
+  const hasWellnessScore =
+    'wellnessScore' in record && typeof record.wellnessScore === 'number';
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -49,9 +60,16 @@ const PredictionDetailsDialog = ({ open, prediction, onClose }: Props) => {
           <Typography variant="body2" color="text.secondary">
             Created at: {formatDateTime(record.createdAt)}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Probability: {formatProbability(record.predictionProbability)}
-          </Typography>
+          {hasProbability && (
+            <Typography variant="body2" color="text.secondary">
+              Probability: {formatProbability(record.predictionProbability)}
+            </Typography>
+          )}
+          {hasWellnessScore && (
+            <Typography variant="body2" color="text.secondary">
+              Wellness score: {formatWellnessScore(record.wellnessScore)}
+            </Typography>
+          )}
         </Box>
 
         <Divider sx={{ my: 2 }} />
@@ -97,6 +115,8 @@ const PredictionInputData = ({ prediction }: InputDataProps) => {
       return <DiabetesPredictionDetails record={record} />;
     case 'heartAttack':
       return <HeartAttackPredictionDetails record={record} />;
+    case 'habits':
+      return <HabitsPredictionDetails record={record} />;
   }
 };
 

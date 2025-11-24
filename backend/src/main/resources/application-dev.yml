@@ -25,11 +25,11 @@ security:
     expiration-time: 1075200000
 
 health-prediction-service:
-  url: http://localhost:5001
+  url: http://localhost:5000
 
 gemini:
   api:
-    key: ${GEMINI_API_KEY}
+    key: AIzaSyC-CYLjKCbDLveeacE5ohpqUH5WOiHapr4
     version: v1beta
   model: gemini-2.0-flash
   system-instruction: 'You are a health and wellness advisor analyzing health questionnaire responses. IMPORTANT GUIDELINES: Provide evidence based health suggestions only, Focus on lifestyle improvements, not medical diagnoses, Always recommend consulting healthcare professionals for serious concerns, Be specific and actionable in your suggestions, Consider the whole person approach (physical, mental, lifestyle), Never provide specific medication recommendations, If symptoms suggest serious conditions, strongly recommend medical consultation. Your role is to provide general wellness guidance, not medical diagnosis or treatment.'

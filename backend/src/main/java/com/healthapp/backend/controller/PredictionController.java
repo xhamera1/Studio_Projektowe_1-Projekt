@@ -9,7 +9,6 @@ import com.healthapp.backend.dto.prediction.StrokePredictionRequest;
 import com.healthapp.backend.dto.predictionHistory.DiabetesPredictionResponse;
 import com.healthapp.backend.dto.predictionHistory.HeartAttackPredictionResponse;
 import com.healthapp.backend.dto.predictionHistory.StrokePredictionResponse;
-import com.healthapp.backend.service.Gemini;
 import com.healthapp.backend.service.PredictionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,6 @@ import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 @RequiredArgsConstructor
 public class PredictionController {
 
-    private final Gemini gemini;
     private final PredictionService predictionService;
 
     @PostMapping(value = "/diabetes/{userId}", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
@@ -62,7 +60,7 @@ public class PredictionController {
     @IsOwnerOrAdmin
     public HabitsPredictionResponse predictHabits(@PathVariable Long userId, @RequestBody @Valid HabitsPredictionRequest request) {
         log.info("Received habits prediction request for user with ID {}: {}", userId, request);
-        String response = gemini.chat("How many hours of sleep should a healthy adult get?");
-        return new HabitsPredictionResponse(response);
+        var assessment = predictionService.assessHabitsFor(request, userId);
+        return HabitsPredictionResponse.from(assessment);
     }
 }

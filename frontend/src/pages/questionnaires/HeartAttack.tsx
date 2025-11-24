@@ -1,4 +1,6 @@
-import { useForm } from 'react-hook-form';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { useQueryClient } from '@tanstack/react-query';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -9,6 +11,12 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { useHeartAttackPrediction } from '../../hooks/useHeartAttackPrediction.ts';
 import ErrorAlert from '../../components/common/ErrorAlert.tsx';
+import PredictionDetailsDialog from '../../components/predictionHistory/PredictionDetailsDialog.tsx';
+import type { SelectedPrediction } from '../../utils/types.ts';
+import { useUserDemographicsQuery } from '../../hooks/useUserDemographicsQuery.ts';
+import { calculateAgeFromDateOfBirth } from '../../utils/profile.ts';
+import { useApplicationContext } from '../../contexts/ApplicationContextProvider.tsx';
+import { useLocalStorage } from 'usehooks-ts';
 
 const sexOptions = ['Female', 'Male'] as const;
 const cpOptions = [
@@ -42,20 +50,49 @@ const DEFAULT_FORM_VALUES = {
 };
 
 const HeartAttack = () => {
+  const { user } = useApplicationContext();
+  const { data: demographics } = useUserDemographicsQuery();
+  const [storedValues, setStoredValues] = useLocalStorage<FormValues | null>(
+    `heart-attack-form-${user?.id ?? 'guest'}`,
+    null
+  );
+  const derivedDefaults = useMemo<FormValues>(() => {
+    if (storedValues) {
+      return storedValues;
+    }
+    if (demographics) {
+      return {
+        ...DEFAULT_FORM_VALUES,
+        age: calculateAgeFromDateOfBirth(demographics.dateOfBirth),
+        sex:
+          demographics.sex === 1 ? sexOptions[1] : sexOptions[0]
+      };
+    }
+    return { ...DEFAULT_FORM_VALUES };
+  }, [storedValues, demographics]);
+  const queryClient = useQueryClient();
   const {
     mutate: predict,
     isPending,
     isError,
     error
   } = useHeartAttackPrediction();
+  const [predictionResult, setPredictionResult] =
+    useState<SelectedPrediction>(null);
   const {
     register,
     handleSubmit,
+    reset,
+    control,
     formState: { errors, isValid }
   } = useForm<FormValues>({
     mode: 'onChange',
-    defaultValues: DEFAULT_FORM_VALUES
+    defaultValues: derivedDefaults
   });
+
+  useEffect(() => {
+    reset(derivedDefaults);
+  }, [derivedDefaults, reset]);
 
   const onSubmit = (data: FormValues) => {
     const age = data.age!;
@@ -67,16 +104,32 @@ const HeartAttack = () => {
     const cp = Math.max(1, cpOptions.indexOf(data.cp) + 1);
     const exang = Math.max(0, exangOptions.indexOf(data.exang));
 
-    predict({
-      age,
-      sex,
-      cp,
-      trestbps,
-      chol,
-      thalach,
-      oldpeak,
-      exang
-    });
+    setPredictionResult(null);
+
+    const formSnapshot: FormValues = { ...data };
+
+    predict(
+      {
+        age,
+        sex,
+        cp,
+        trestbps,
+        chol,
+        thalach,
+        oldpeak,
+        exang
+      },
+      {
+        onSuccess: record => {
+          setStoredValues(formSnapshot);
+          setPredictionResult({
+            type: 'heartAttack',
+            record
+          });
+          queryClient.invalidateQueries({ queryKey: ['predictionHistory'] });
+        }
+      }
+    );
   };
 
   return (
@@ -147,25 +200,30 @@ const HeartAttack = () => {
                 helperText={errors.age ? errors.age.message : ' '}
                 fullWidth
               />
-              <TextField
-                label="Sex"
-                select
-                defaultValue={sexOptions[0]}
-                {...register('sex', { required: 'Please select a sex.' })}
-                error={!!errors.sex}
-                helperText={errors.sex ? errors.sex.message : ' '}
-                fullWidth
-              >
-                {sexOptions.map(opt => (
-                  <MenuItem key={opt} value={opt}>
-                    {opt}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <Controller
+                name="sex"
+                control={control}
+                rules={{ required: 'Please select a sex.' }}
+                render={({ field }) => (
+                  <TextField
+                    label="Sex"
+                    select
+                    {...field}
+                    error={!!errors.sex}
+                    helperText={errors.sex ? errors.sex.message : ' '}
+                    fullWidth
+                  >
+                    {sexOptions.map(opt => (
+                      <MenuItem key={opt} value={opt}>
+                        {opt}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
               <TextField
                 label="Chest pain type"
                 select
-                defaultValue={cpOptions[0]}
                 {...register('cp', {
                   required: 'Please select a chest pain type.'
                 })}
@@ -258,7 +316,6 @@ const HeartAttack = () => {
               <TextField
                 label="Exercise Induced Angina"
                 select
-                defaultValue={exangOptions[0]}
                 {...register('exang', {
                   required: 'Please select an option.'
                 })}
@@ -284,6 +341,11 @@ const HeartAttack = () => {
           </Box>
         </Card>
       </Container>
+      <PredictionDetailsDialog
+        open={!!predictionResult}
+        prediction={predictionResult}
+        onClose={() => setPredictionResult(null)}
+      />
     </>
   );
 };

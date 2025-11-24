@@ -73,6 +73,11 @@ public class DiabetesPrediction {
             User user,
             String recommendation
     ) {
+        // Convert probability from decimal (0.0-1.0) to percentage (0-100)
+        Float probabilityPercentage = prediction.probability() != null 
+                ? prediction.probability() * 100f 
+                : null;
+        
         return DiabetesPrediction.builder()
                 .user(user)
                 .hba1cLevel(request.hba1cLevel())
@@ -80,7 +85,7 @@ public class DiabetesPrediction {
                 .bmi(request.bmi())
                 .age(request.age())
                 .smokingHistory(request.smokingHistory())
-                .predictionProbability(prediction.probability())
+                .predictionProbability(probabilityPercentage)
                 .recommendations(recommendation)
                 .build();
     }

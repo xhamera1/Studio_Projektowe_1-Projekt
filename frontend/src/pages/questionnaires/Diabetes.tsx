@@ -1,4 +1,6 @@
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useQueryClient } from '@tanstack/react-query';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -9,6 +11,12 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { useDiabetesPrediction } from '../../hooks/useDiabetesPrediction.ts';
 import ErrorAlert from '../../components/common/ErrorAlert.tsx';
+import PredictionDetailsDialog from '../../components/predictionHistory/PredictionDetailsDialog.tsx';
+import type { SelectedPrediction } from '../../utils/types.ts';
+import { useUserDemographicsQuery } from '../../hooks/useUserDemographicsQuery.ts';
+import { calculateAgeFromDateOfBirth } from '../../utils/profile.ts';
+import { useApplicationContext } from '../../contexts/ApplicationContextProvider.tsx';
+import { useLocalStorage } from 'usehooks-ts';
 
 const smokingOptions = [
   'No information',
@@ -37,20 +45,48 @@ const DEFAULT_FORM_VALUES = {
 };
 
 const Diabetes = () => {
+  const { user } = useApplicationContext();
+  const { data: demographics } = useUserDemographicsQuery();
+  const [storedValues, setStoredValues] = useLocalStorage<FormValues | null>(
+    `diabetes-form-${user?.id ?? 'guest'}`,
+    null
+  );
+  const derivedDefaults = useMemo<FormValues>(() => {
+    if (storedValues) {
+      return storedValues;
+    }
+    if (demographics) {
+      return {
+        ...DEFAULT_FORM_VALUES,
+        age: calculateAgeFromDateOfBirth(demographics.dateOfBirth),
+        height: demographics.height ?? null,
+        weight: demographics.weight ?? null
+      };
+    }
+    return { ...DEFAULT_FORM_VALUES };
+  }, [storedValues, demographics]);
+  const queryClient = useQueryClient();
   const {
     mutate: predict,
     isPending,
     error,
     isError
   } = useDiabetesPrediction();
+  const [predictionResult, setPredictionResult] =
+    useState<SelectedPrediction>(null);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid }
   } = useForm<FormValues>({
     mode: 'onChange',
-    defaultValues: DEFAULT_FORM_VALUES
+    defaultValues: derivedDefaults
   });
+
+  useEffect(() => {
+    reset(derivedDefaults);
+  }, [derivedDefaults, reset]);
 
   const computeBmi = (height: number | null, weight: number | null) => {
     if (!height || !weight) return 0;
@@ -65,13 +101,29 @@ const Diabetes = () => {
       smokingOptions.indexOf(data.smoking_habits)
     );
 
-    predict({
-      hba1cLevel: data.hba1c_level!,
-      bloodGlucoseLevel: data.blood_glucose_level!,
-      bmi: Number(bmi.toFixed(2)),
-      age: data.age!,
-      smokingHistory
-    });
+    setPredictionResult(null);
+
+    const formSnapshot: FormValues = { ...data };
+
+    predict(
+      {
+        hba1cLevel: data.hba1c_level!,
+        bloodGlucoseLevel: data.blood_glucose_level!,
+        bmi: Number(bmi.toFixed(2)),
+        age: data.age!,
+        smokingHistory
+      },
+      {
+        onSuccess: record => {
+          setStoredValues(formSnapshot);
+          setPredictionResult({
+            type: 'diabetes',
+            record
+          });
+          queryClient.invalidateQueries({ queryKey: ['predictionHistory'] });
+        }
+      }
+    );
   };
 
   return (
@@ -261,6 +313,11 @@ const Diabetes = () => {
           </Box>
         </Card>
       </Container>
+      <PredictionDetailsDialog
+        open={!!predictionResult}
+        prediction={predictionResult}
+        onClose={() => setPredictionResult(null)}
+      />
     </>
   );
 };

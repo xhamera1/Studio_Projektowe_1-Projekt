@@ -80,6 +80,11 @@ public class StrokePrediction {
             User user,
             String recommendations
     ) {
+        // Convert probability from decimal (0.0-1.0) to percentage (0-100)
+        Float probabilityPercentage = prediction.probability() != null 
+                ? prediction.probability() * 100f 
+                : null;
+        
         return StrokePrediction.builder()
                 .user(user)
                 .age(request.age())
@@ -89,7 +94,7 @@ public class StrokePrediction {
                 .workType(request.workType())
                 .avgGlucoseLevel(request.avgGlucoseLevel())
                 .bmi(request.bmi())
-                .predictionProbability(prediction.probability())
+                .predictionProbability(probabilityPercentage)
                 .recommendations(recommendations)
                 .build();
     }

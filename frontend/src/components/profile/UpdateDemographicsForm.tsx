@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -53,11 +54,16 @@ const UpdateDemographicsForm = ({ userId, demographics }: Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid, isDirty }
   } = useForm<FormValues>({
     mode: 'onChange',
     defaultValues: getDefaultValues()
   });
+
+  useEffect(() => {
+    reset(getDefaultValues());
+  }, [demographics, reset]);
 
   const {
     mutate: saveData,
@@ -130,10 +136,8 @@ const UpdateDemographicsForm = ({ userId, demographics }: Props) => {
               label="Sex"
               select
               {...register('sex', {
-                valueAsNumber: true,
                 required: 'Please select your sex.'
               })}
-              defaultValue={getDefaultValues().sex}
               error={!!errors.sex}
               helperText={errors.sex ? errors.sex.message : ' '}
               fullWidth

@@ -1,7 +1,66 @@
-export const formatDateTime = (value: Date | string) =>
-  new Date(value).toLocaleString();
+/**
+ * Formats a date/time value to a localized string.
+ * Handles invalid dates gracefully.
+ * @param value - Date or string to format
+ * @returns Formatted date string or "Invalid Date" if date is invalid
+ */
+export const formatDateTime = (value: Date | string | null | undefined): string => {
+  if (value == null) {
+    return 'N/A';
+  }
+  
+  try {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
+    return date.toLocaleString();
+  } catch (error) {
+    return 'Invalid Date';
+  }
+};
 
-export const formatProbability = (value: number) => `${value.toFixed(2)}%`;
+/**
+ * Formats a probability value as a percentage.
+ * Handles both decimal format (0.0-1.0) and percentage format (0-100).
+ * If value is less than or equal to 1, assumes it's in decimal format and multiplies by 100.
+ * @param value - Probability value (either 0.0-1.0 or 0-100)
+ * @returns Formatted string like "93.00%"
+ */
+export const formatProbability = (value: number | null | undefined): string => {
+  if (value == null || Number.isNaN(value)) {
+    return 'N/A';
+  }
+  
+  // Handle edge cases: negative values or values > 100 (if already percentage)
+  // If value is less than or equal to 1, assume it's in decimal format (0.0-1.0) and convert to percentage
+  // Otherwise, assume it's already in percentage format (0-100)
+  let percentage: number;
+  if (value < 0) {
+    percentage = 0; // Clamp negative values to 0
+  } else if (value <= 1.0) {
+    percentage = value * 100;
+  } else {
+    percentage = Math.min(100, value); // Clamp to max 100
+  }
+  
+  return `${percentage.toFixed(2)}%`;
+};
+
+/**
+ * Formats a wellness score value.
+ * @param value - Wellness score (0-100)
+ * @returns Formatted string like "85/100" or "N/A" if invalid
+ */
+export const formatWellnessScore = (value: number | null | undefined): string => {
+  if (value == null || Number.isNaN(value)) {
+    return 'N/A';
+  }
+  
+  // Clamp value between 0 and 100
+  const clampedValue = Math.max(0, Math.min(100, value));
+  return `${clampedValue.toFixed(0)}/100`;
+};
 
 export const formatSex = (value: number | null | undefined) => {
   if (value === 0) return 'Female';

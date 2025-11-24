@@ -82,6 +82,11 @@ public class HeartAttackPrediction {
             User user,
             String recommendations
     ) {
+        // Convert probability from decimal (0.0-1.0) to percentage (0-100)
+        Float probabilityPercentage = prediction.probability() != null 
+                ? prediction.probability() * 100f 
+                : null;
+        
         return HeartAttackPrediction.builder()
                 .user(user)
                 .age(request.age())
@@ -92,7 +97,7 @@ public class HeartAttackPrediction {
                 .thalach(request.thalach())
                 .oldpeak(request.oldpeak())
                 .exang(request.exang())
-                .predictionProbability(prediction.probability())
+                .predictionProbability(probabilityPercentage)
                 .recommendations(recommendations)
                 .build();
     }

@@ -78,6 +78,7 @@ export type SignupRequest = {
   email: string;
   firstName: string;
   lastName: string;
+  demographics?: UserDemographicsRequest | null;
 };
 
 export type UserDemographicsRequest = {
@@ -134,8 +135,35 @@ export type HeartAttackPredictionRecord = {
   createdAt: Date;
 };
 
+export type HabitsAssessmentRequest = {
+  waterIntakeGlasses: number;
+  sleepHours: number;
+  stepsPerDay: number;
+  exerciseMinutes: number;
+  screenTimeHours: number;
+  stressLevel: number;
+  fruitsVeggiesServings: number;
+};
+
+export type HabitsAssessmentRecord = HabitsAssessmentRequest & {
+  id: number;
+  wellnessScore: number;
+  recommendations: string;
+  createdAt: Date;
+};
+
 export type PredictionHistoryResponse = {
   strokePredictions: StrokePredictionRecord[];
   diabetesPredictions: DiabetesPredictionRecord[];
   heartAttackPredictions: HeartAttackPredictionRecord[];
+  habitAssessments: HabitsAssessmentRecord[];
 };
+
+export type PredictionType = 'stroke' | 'diabetes' | 'heartAttack' | 'habits';
+
+export type SelectedPrediction =
+  | { type: 'stroke'; record: StrokePredictionRecord }
+  | { type: 'diabetes'; record: DiabetesPredictionRecord }
+  | { type: 'heartAttack'; record: HeartAttackPredictionRecord }
+  | { type: 'habits'; record: HabitsAssessmentRecord }
+  | null;

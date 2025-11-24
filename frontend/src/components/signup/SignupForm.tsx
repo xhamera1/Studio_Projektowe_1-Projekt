@@ -1,18 +1,37 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { Stack } from '@mui/material';
+import { Divider, MenuItem, Stack, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useSignup } from '../../hooks/useSignup.ts';
-import type { SignupRequest } from '../../utils/types.ts';
+import type { SignupRequest, UserDemographicsRequest } from '../../utils/types.ts';
 import ErrorAlert from '../common/ErrorAlert.tsx';
 
-const DEFAULT_FORM_VALUES: SignupRequest = {
+const sexOptions = ['Female', 'Male'] as const;
+
+type DemographicsFormValues = {
+  dateOfBirth: string;
+  sex: (typeof sexOptions)[number] | '';
+  weight: string;
+  height: string;
+};
+
+type FormValues = Omit<SignupRequest, 'demographics'> & {
+  demographics: DemographicsFormValues;
+};
+
+const DEFAULT_FORM_VALUES: FormValues = {
   username: '',
   password: '',
   email: '',
   firstName: '',
-  lastName: ''
+  lastName: '',
+  demographics: {
+    dateOfBirth: '',
+    sex: '',
+    weight: '',
+    height: ''
+  }
 };
 
 const SignupForm = () => {
@@ -21,13 +40,39 @@ const SignupForm = () => {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<SignupRequest>({
+  } = useForm<FormValues>({
     mode: 'onSubmit',
     defaultValues: DEFAULT_FORM_VALUES
   });
 
-  const onSubmit = (data: SignupRequest) => {
-    signup(data);
+  const shouldSendDemographics = (
+    demo: DemographicsFormValues
+  ): demo is Required<DemographicsFormValues> => {
+    return (
+      !!demo.dateOfBirth &&
+      !!demo.sex &&
+      demo.weight.trim().length > 0 &&
+      demo.height.trim().length > 0
+    );
+  };
+
+  const onSubmit = (data: FormValues) => {
+    const { demographics, ...rest } = data;
+    let demographicsPayload: UserDemographicsRequest | null = null;
+
+    if (shouldSendDemographics(demographics)) {
+      demographicsPayload = {
+        sex: sexOptions.indexOf(demographics.sex),
+        dateOfBirth: new Date(demographics.dateOfBirth),
+        weight: Number(demographics.weight),
+        height: Number(demographics.height)
+      };
+    }
+
+    signup({
+      ...rest,
+      demographics: demographicsPayload
+    });
   };
   return (
     <Box
@@ -130,6 +175,77 @@ const SignupForm = () => {
           })}
           error={!!errors.lastName}
           helperText={errors.lastName ? errors.lastName.message : ' '}
+        />
+
+        <Divider />
+
+        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+          Optional health profile
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Provide your basic health data once so we can pre-fill questionnaires
+          and personalize recommendations. You can always update this later in
+          the account settings.
+        </Typography>
+
+        <TextField
+          label="Date of Birth"
+          type="date"
+          InputLabelProps={{ shrink: true }}
+          {...register('demographics.dateOfBirth')}
+          error={!!errors.demographics?.dateOfBirth}
+          helperText={
+            errors.demographics?.dateOfBirth
+              ? 'Please provide a valid date.'
+              : ' '
+          }
+          fullWidth
+        />
+
+        <TextField
+          label="Sex"
+          select
+          {...register('demographics.sex')}
+          error={!!errors.demographics?.sex}
+          helperText={
+            errors.demographics?.sex ? errors.demographics.sex.message : ' '
+          }
+          fullWidth
+        >
+          <MenuItem value="">Prefer not to say</MenuItem>
+          {sexOptions.map(opt => (
+            <MenuItem key={opt} value={opt}>
+              {opt}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <TextField
+          label="Weight (kg)"
+          type="number"
+          inputProps={{ inputMode: 'numeric', step: 0.1, min: 1 }}
+          {...register('demographics.weight')}
+          error={!!errors.demographics?.weight}
+          helperText={
+            errors.demographics?.weight
+              ? 'Please enter a valid weight.'
+              : ' '
+          }
+          fullWidth
+        />
+
+        <TextField
+          label="Height (cm)"
+          type="number"
+          inputProps={{ inputMode: 'numeric', step: 1, min: 1 }}
+          {...register('demographics.height')}
+          error={!!errors.demographics?.height}
+          helperText={
+            errors.demographics?.height
+              ? 'Please enter a valid height.'
+              : ' '
+          }
+          fullWidth
         />
 
         <Button

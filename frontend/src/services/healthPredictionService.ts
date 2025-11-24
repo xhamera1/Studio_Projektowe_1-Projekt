@@ -1,6 +1,8 @@
 import type {
   DiabetesPredictionRecord,
   DiabetesPredictionRequest,
+  HabitsAssessmentRecord,
+  HabitsAssessmentRequest,
   HeartAttackPredictionRecord,
   HeartAttackPredictionRequest,
   StrokePredictionRecord,
@@ -48,6 +50,18 @@ export const healthPredictionService = {
   ): Promise<HeartAttackPredictionRecord> =>
     postPrediction(
       `${ENDPOINTS.PREDICTIONS}/heart-attack`,
+      request,
+      userId,
+      token
+    ),
+
+  assessHabits: (
+    request: HabitsAssessmentRequest,
+    userId: number,
+    token: string
+  ): Promise<HabitsAssessmentRecord> =>
+    postPrediction(
+      `${ENDPOINTS.PREDICTIONS}/habits`,
       request,
       userId,
       token

@@ -4,6 +4,7 @@ import com.healthapp.backend.dto.user.SignupRequest;
 import com.healthapp.backend.dto.user.UserEditRequest;
 import com.healthapp.backend.dto.user.UserResponse;
 import com.healthapp.backend.model.User;
+import com.healthapp.backend.repository.UserDemographicsRepository;
 import com.healthapp.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import static com.healthapp.backend.dto.user.UserResponse.createUserResponseFrom
 import static com.healthapp.backend.exception.UserAlreadyExistsException.userAlreadyExistsException;
 import static com.healthapp.backend.exception.UserNotFoundException.userNotFoundException;
 import static com.healthapp.backend.model.User.createUserFrom;
+import static com.healthapp.backend.model.UserDemographics.createUserDemographicsFrom;
 
 @Service
 @Transactional
@@ -21,6 +23,7 @@ import static com.healthapp.backend.model.User.createUserFrom;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserDemographicsRepository userDemographicsRepository;
     private final PasswordEncoder passwordEncoder;
 
     public User findUserBy(Long userId) {
@@ -45,6 +48,10 @@ public class UserService {
         var user = createUserFrom(request, encodedPassword);
 
         userRepository.save(user);
+        if (request.demographicData() != null) {
+            var demographics = createUserDemographicsFrom(request.demographicData(), user);
+            userDemographicsRepository.save(demographics);
+        }
         return createUserResponseFrom(user);
     }
 

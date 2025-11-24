@@ -1,5 +1,8 @@
 package com.healthapp.backend.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.healthapp.backend.dto.userDemographicData.UserDemographicDataRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -21,6 +24,10 @@ public record SignupRequest(
 
         @NotBlank(message = "Password is required")
         @Size(min = 11, message = "Password must be at least 11 characters long")
-        String password
+        String password,
+
+        @JsonProperty("demographics")
+        @Valid
+        UserDemographicDataRequest demographicData
 ) {
 }
