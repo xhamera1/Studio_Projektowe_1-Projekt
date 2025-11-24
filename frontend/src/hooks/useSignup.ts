@@ -1,38 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { authenticationService } from '../services/authenticationService.ts';
 import { useMutation } from '@tanstack/react-query';
+import type { ApiError, SignupRequest } from '../utils/types.ts';
 
-export type SignupRequest = {
-  username: string;
-  password: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-};
-
-export const useSignup = ({
-  onSuccess,
-  onError
-}: {
-  onSuccess?: (data: void, variables: SignupRequest, context: unknown) => void;
-  onError?: (error: Error, variables: SignupRequest, context: unknown) => void;
-} = {}) => {
+export const useSignup = () => {
   const navigate = useNavigate();
 
-  return useMutation<void, Error, SignupRequest>({
+  return useMutation<void, ApiError, SignupRequest>({
     mutationKey: ['signup'],
     mutationFn: authenticationService.signup,
-    onSuccess: (data, variables, context) => {
+    onSuccess: () => {
       navigate('/login');
-      if (onSuccess) {
-        onSuccess(data, variables, context);
-      }
-    },
-    onError: (error, variables, context) => {
-      console.error('Signup failed:', error.message);
-      if (onError) {
-        onError(error, variables, context);
-      }
     }
   });
 };

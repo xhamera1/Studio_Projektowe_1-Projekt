@@ -1,9 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import Diabetes from '../pages/questionnaires/Diabetes.tsx';
 import Stroke from '../pages/questionnaires/Stroke.tsx';
 import Questionnaires from '../pages/questionnaires/Questionnaires.tsx';
 import HeartAttack from '../pages/questionnaires/HeartAttack.tsx';
 import Habits from '../pages/questionnaires/Habits.tsx';
+import Diabetes from '../pages/questionnaires/Diabetes.tsx';
 
 const QuestionnaireRoutes = () => {
   return (

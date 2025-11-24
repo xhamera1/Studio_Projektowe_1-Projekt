@@ -1,65 +1,268 @@
-import Questionnaire from "../../components/questionnaire/Questionnaire.tsx";
-import type {TextInput} from "../../components/questionnaire/Questionnaire.tsx";
-import type {MultipleSelect} from "../../components/questionnaire/Questionnaire.tsx";
+import { useForm } from 'react-hook-form';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Card from '@mui/material/Card';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import { useDiabetesPrediction } from '../../hooks/useDiabetesPrediction.ts';
+import ErrorAlert from '../../components/common/ErrorAlert.tsx';
 
-const textInputList: TextInput[] = [
-    {
-        idx: 0,
-        id: "age",
-        label: "Age",
-        min: 10,
-        max: 100,
-    },
-    {
-        idx: 1,
-        id: "height",
-        label: "Height",
-        min: 120,
-        max: 230,
-    },
-    {
-        idx: 2,
-        id: "weight",
-        label: "Weight",
-        min: 30,
-        max: 300,
-    },
-    {
-        idx: 3,
-        id: "HbA1c_level",
-        label: "HbA1c level",
-        min: 3.5,
-        max: 18,
-    },
-    {
-        idx: 4,
-        id: "blood_glucose_level",
-        label: "Blood glucose level",
-        min: 40,
-        max: 600,
-    }];
+const smokingOptions = [
+  'No information',
+  'Current',
+  'Ever',
+  'Former',
+  'Never'
+] as const;
 
-const multipleSelectList: MultipleSelect[] = [
-    {
-        idx: 0,
-        id: "smoking_habits",
-        label: "Smoking habits",
-        options: [
-            'no info',
-            'current',
-            'ever',
-            'former',
-            'never',
-            'not current',
-        ]
-    }
-];
+type FormValues = {
+  age: number | null;
+  height: number | null;
+  weight: number | null;
+  hba1c_level: number | null;
+  blood_glucose_level: number | null;
+  smoking_habits: (typeof smokingOptions)[number];
+};
 
+const DEFAULT_FORM_VALUES = {
+  age: null,
+  height: null,
+  weight: null,
+  hba1c_level: null,
+  blood_glucose_level: null,
+  smoking_habits: smokingOptions[0]
+};
 
 const Diabetes = () => {
-    return <><h1>Diabetes Prediction Page</h1>
-        <Questionnaire textInputList={textInputList} multipleSelectList={multipleSelectList}/>
-    </>;
+  const {
+    mutate: predict,
+    isPending,
+    error,
+    isError
+  } = useDiabetesPrediction();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid }
+  } = useForm<FormValues>({
+    mode: 'onChange',
+    defaultValues: DEFAULT_FORM_VALUES
+  });
+
+  const computeBmi = (height: number | null, weight: number | null) => {
+    if (!height || !weight) return 0;
+    const h = height / 100;
+    return weight / (h * h);
+  };
+
+  const onSubmit = (data: FormValues) => {
+    const bmi = computeBmi(data.height, data.weight);
+    const smokingHistory = Math.max(
+      0,
+      smokingOptions.indexOf(data.smoking_habits)
+    );
+
+    predict({
+      hba1cLevel: data.hba1c_level!,
+      bloodGlucoseLevel: data.blood_glucose_level!,
+      bmi: Number(bmi.toFixed(2)),
+      age: data.age!,
+      smokingHistory
+    });
+  };
+
+  return (
+    <>
+      <Container
+        maxWidth="sm"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 'calc(100vh - 96px)',
+          py: 4
+        }}
+      >
+        <Card
+          elevation={3}
+          sx={{
+            width: '100%',
+            borderRadius: 2,
+            p: { xs: 2, sm: 3 },
+            boxShadow: '0 6px 18px rgba(15, 23, 42, 0.08)'
+          }}
+        >
+          <Box component="div" sx={{ mb: 2 }}>
+            <Typography
+              variant="h6"
+              component="h1"
+              align="center"
+              sx={{ fontWeight: 600 }}
+            >
+              Diabetes Prediction
+            </Typography>
+            <Typography
+              variant="body2"
+              align="center"
+              color="text.secondary"
+              sx={{ mt: 0.5 }}
+            >
+              Provide the information below to get a quick estimate
+            </Typography>
+          </Box>
+
+          {isError && <ErrorAlert error={error} />}
+
+          <Box
+            component="form"
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            sx={{ width: '100%' }}
+          >
+            <Stack spacing={2}>
+              <TextField
+                label="Age"
+                type="number"
+                placeholder={'e.g., 45'}
+                inputProps={{ inputMode: 'numeric', step: 1 }}
+                {...register('age', {
+                  valueAsNumber: true,
+                  required: 'Please enter an age.',
+                  validate: value =>
+                    (typeof value === 'number' &&
+                      Number.isFinite(value) &&
+                      value >= 1 &&
+                      value <= 120) ||
+                    'Please enter an age between 1 and 120.'
+                })}
+                error={!!errors.age}
+                helperText={errors.age ? errors.age.message : ' '}
+                fullWidth
+              />
+
+              <TextField
+                label="Height (cm)"
+                type="number"
+                placeholder={'e.g., 170'}
+                inputProps={{ inputMode: 'numeric', step: 1 }}
+                {...register('height', {
+                  valueAsNumber: true,
+                  required: 'Please enter a height.',
+                  validate: value =>
+                    (typeof value === 'number' &&
+                      Number.isFinite(value) &&
+                      value >= 50 &&
+                      value <= 300) ||
+                    'Please enter a height between 50 and 300 cm.'
+                })}
+                error={!!errors.height}
+                helperText={errors.height ? errors.height.message : ' '}
+                fullWidth
+              />
+
+              <TextField
+                label="Weight (kg)"
+                type="number"
+                placeholder={'e.g., 75.5'}
+                inputProps={{ inputMode: 'numeric', step: 0.1 }}
+                {...register('weight', {
+                  valueAsNumber: true,
+                  required: 'Please enter a weight.',
+                  validate: value =>
+                    (typeof value === 'number' &&
+                      Number.isFinite(value) &&
+                      value >= 30 &&
+                      value <= 400) ||
+                    'Please enter a weight between 30 and 400 kg.'
+                })}
+                error={!!errors.weight}
+                helperText={errors.weight ? errors.weight.message : ' '}
+                fullWidth
+              />
+
+              <TextField
+                label="Glycated Hemoglobin (HbA1c)"
+                type="number"
+                placeholder={'e.g., 6.0 (Normal: < 5.7)'}
+                inputProps={{ step: 0.1 }}
+                {...register('hba1c_level', {
+                  valueAsNumber: true,
+                  required: 'Please enter an HbA1c level.',
+                  validate: value =>
+                    (typeof value === 'number' &&
+                      Number.isFinite(value) &&
+                      value >= 2 &&
+                      value <= 20) ||
+                    'Please enter a level between 2 and 20.'
+                })}
+                error={!!errors.hba1c_level}
+                helperText={
+                  errors.hba1c_level ? errors.hba1c_level.message : ' '
+                }
+                fullWidth
+              />
+
+              <TextField
+                label="Blood Sugar Level"
+                type="number"
+                placeholder={'e.g., 90 (Normal: 70-100)'}
+                inputProps={{ inputMode: 'numeric', step: 1 }}
+                {...register('blood_glucose_level', {
+                  valueAsNumber: true,
+                  required: 'Please enter a blood sugar level.',
+                  validate: value =>
+                    (typeof value === 'number' &&
+                      Number.isFinite(value) &&
+                      value >= 20 &&
+                      value <= 500) ||
+                    'Please enter a level between 20 and 500.'
+                })}
+                error={!!errors.blood_glucose_level}
+                helperText={
+                  errors.blood_glucose_level
+                    ? errors.blood_glucose_level.message
+                    : ' '
+                }
+                fullWidth
+              />
+
+              <TextField
+                label="Smoking habits"
+                select
+                {...register('smoking_habits', {
+                  required: 'Please select your smoking habits.'
+                })}
+                error={!!errors.smoking_habits}
+                defaultValue={smokingOptions[0]}
+                helperText={
+                  errors.smoking_habits ? errors.smoking_habits.message : ' '
+                }
+                fullWidth
+              >
+                {smokingOptions.map(opt => (
+                  <MenuItem key={opt} value={opt}>
+                    {opt}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={!isValid || isPending}
+              >
+                {isPending ? 'Predicting...' : 'Submit'}
+              </Button>
+            </Stack>
+          </Box>
+        </Card>
+      </Container>
+    </>
+  );
 };
 
 export default Diabetes;

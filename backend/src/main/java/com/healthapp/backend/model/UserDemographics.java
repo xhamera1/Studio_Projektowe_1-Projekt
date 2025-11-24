@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDemographicData {
+public class UserDemographics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -55,8 +55,8 @@ public class UserDemographicData {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public static UserDemographicData createUserDemographicDataFrom(UserDemographicDataRequest request, User user) {
-        return UserDemographicData.builder()
+    public static UserDemographics createUserDemographicsFrom(UserDemographicDataRequest request, User user) {
+        return UserDemographics.builder()
                 .user(user)
                 .sex(request.sex())
                 .dateOfBirth(request.dateOfBirth())

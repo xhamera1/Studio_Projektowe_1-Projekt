@@ -7,27 +7,35 @@ import Account from './pages/Account.tsx';
 import QuestionnaireRoutes from './routes/QuestionnaireRoutes.tsx';
 import NotFound from './pages/NotFound.tsx';
 import ProtectedRoutes from './routes/ProtectedRoutes.tsx';
-import { AuthenticationContextProvider } from './contexts/AuthenticationContextProvider.tsx';
+import PredictionHistory from './pages/PredictionHistory.tsx';
+import AppLayout from './components/AppLayout.tsx';
+import { ThemeContextProvider } from './contexts/ThemeContextProvider.tsx';
 
 function App() {
   return (
-    <ApplicationContextProvider>
-      <AuthenticationContextProvider>
+    <ThemeContextProvider>
+      <ApplicationContextProvider>
         <Routes>
           <Route path={'/signup'} element={<Signup />} />
           <Route path={'/login'} element={<Login />} />
-          <Route element={<ProtectedRoutes />}>
-            <Route path={'/'} element={<Home />} />
-            <Route path={'/account'} element={<Account />} />
-            <Route
-              path={'/questionnaire/*'}
-              element={<QuestionnaireRoutes />}
-            />
+          <Route element={<AppLayout />}>
+            <Route element={<ProtectedRoutes />}>
+              <Route path={'/'} element={<Home />} />
+              <Route path={'/account'} element={<Account />} />
+              <Route
+                path={'/prediction-history'}
+                element={<PredictionHistory />}
+              />
+              <Route
+                path={'/questionnaire/*'}
+                element={<QuestionnaireRoutes />}
+              />
+            </Route>
           </Route>
           <Route path={'*'} element={<NotFound />} />
         </Routes>
-      </AuthenticationContextProvider>
-    </ApplicationContextProvider>
+      </ApplicationContextProvider>
+    </ThemeContextProvider>
   );
 }
 

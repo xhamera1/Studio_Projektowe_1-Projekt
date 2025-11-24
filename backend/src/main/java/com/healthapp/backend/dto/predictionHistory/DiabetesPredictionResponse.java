@@ -1,6 +1,6 @@
 package com.healthapp.backend.dto.predictionHistory;
 
-import com.healthapp.backend.model.DiabetesData;
+import com.healthapp.backend.model.DiabetesPrediction;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class DiabetesPredictionHistoryDto {
+public class DiabetesPredictionResponse {
     private Long id;
     private Float hba1cLevel;
     private Integer bloodGlucoseLevel;
@@ -19,8 +19,8 @@ public class DiabetesPredictionHistoryDto {
     private String recommendations;
     private LocalDateTime createdAt;
 
-    public static DiabetesPredictionHistoryDto createFrom(DiabetesData data) {
-        return DiabetesPredictionHistoryDto.builder()
+    public static DiabetesPredictionResponse createDiabetesPredictionResponseFrom(DiabetesPrediction data) {
+        return DiabetesPredictionResponse.builder()
                 .id(data.getId())
                 .hba1cLevel(data.getHba1cLevel())
                 .bloodGlucoseLevel(data.getBloodGlucoseLevel())

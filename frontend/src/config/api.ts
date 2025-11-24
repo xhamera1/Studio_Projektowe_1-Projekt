@@ -25,13 +25,8 @@ export function apiUrl(path: string): string {
 
 export const ENDPOINTS = {
   PREDICTIONS: apiUrl('/api/predictions'),
+  PREDICTION_HISTORY: apiUrl('/api/prediction-history'),
   USERS: apiUrl('/api/users'),
+  USER_DEMOGRAPHICS: apiUrl('/api/users/demographics'),
   LOGIN: apiUrl('/auth/login')
-} as const;
-
-export const ENV = {
-  isDevelopment: import.meta.env.DEV,
-  isProduction: import.meta.env.PROD,
-  enableDebug: import.meta.env.VITE_ENABLE_DEBUG === 'true',
-  environment: import.meta.env.VITE_ENV || 'development'
 } as const;

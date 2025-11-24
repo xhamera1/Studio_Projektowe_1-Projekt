@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StrokeData {
+public class StrokePrediction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,10 +61,6 @@ public class StrokeData {
     @Column(name = "prediction_probability")
     private Float predictionProbability;
 
-    @Column(name = "model_version")
-    private String modelVersion;
-
-
     @Lob
     @Column(name = "llm_recommendation", columnDefinition = "TEXT")
     private String recommendations;
@@ -78,13 +74,13 @@ public class StrokeData {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public static StrokeData createStrokeDataFrom(
+    public static StrokePrediction createStrokePredictionFrom(
             StrokePredictionRequest request,
             HealthPredictionServiceResponse prediction,
             User user,
             String recommendations
     ) {
-        return StrokeData.builder()
+        return StrokePrediction.builder()
                 .user(user)
                 .age(request.age())
                 .sex(request.sex())

@@ -1,6 +1,6 @@
 package com.healthapp.backend.dto.predictionHistory;
 
-import com.healthapp.backend.model.StrokeData;
+import com.healthapp.backend.model.StrokePrediction;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class StrokePredictionHistoryDto {
+public class StrokePredictionResponse {
     private Long id;
     private Integer age;
     private Integer sex;
@@ -21,8 +21,8 @@ public class StrokePredictionHistoryDto {
     private String recommendations;
     private LocalDateTime createdAt;
 
-    public static StrokePredictionHistoryDto createFrom(StrokeData data) {
-        return StrokePredictionHistoryDto.builder()
+    public static StrokePredictionResponse createStrokePredictionResponseFrom(StrokePrediction data) {
+        return StrokePredictionResponse.builder()
                 .id(data.getId())
                 .age(data.getAge())
                 .sex(data.getSex())
