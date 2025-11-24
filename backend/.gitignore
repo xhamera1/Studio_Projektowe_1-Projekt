@@ -200,3 +200,7 @@ README.html
 *.iml
 .idea
 .exercism
+
+
+backend/src/main/resources/application-dev.yml
+src/main/resources/application-dev.yml
