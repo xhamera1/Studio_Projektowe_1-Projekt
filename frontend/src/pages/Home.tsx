@@ -17,7 +17,7 @@ import {
   Bloodtype,
   Spa,
   Assessment,
-  Person,
+  Person, Grain,
 } from '@mui/icons-material';
 import { useApplicationContext } from '../contexts/ApplicationContextProvider.tsx';
 import { usePredictionHistory } from '../hooks/usePredictionHistory.ts';
@@ -35,11 +35,9 @@ import {
   formatWellnessScore,
 } from '../utils/formatters.ts';
 import { calculateAgeFromDateOfBirth } from '../utils/profile.ts';
-import DiabetesTrendChart from '../components/home/DiabetesTrendChart.tsx';
-import HeartAttackTrendChart from '../components/home/HeartAttackTrendChart.tsx';
-import StrokeTrendChart from '../components/home/StrokeTrendChart.tsx';
 import WellnessTrendChart from '../components/home/WellnessTrendChart.tsx';
 import CombinedRiskChart from '../components/home/CombinedRiskChart.tsx';
+import RiskTrendChart from "../components/home/RiskTrendChart.tsx";
 
 /**
  * Normalizes a probability value to percentage format (0-100).
@@ -373,7 +371,7 @@ const Home = () => {
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Welcome Section */}
+      {/* 'Welcome' Section */}
       <Box sx={{ mb: 4 }}>
         <Typography
           variant="h3"
@@ -457,7 +455,7 @@ const Home = () => {
               <CardContent>
                 <Stack direction="row" alignItems="center" spacing={1} mb={1}>
                   <Bloodtype color="error" />
-                  <Typography variant="h6">Latest Diabetes</Typography>
+                  <Typography variant="h6">Latest Diabetes Prediction</Typography>
                 </Stack>
                 <Typography variant="h3" sx={{ fontWeight: 700 }}>
                   {formatProbability(
@@ -478,7 +476,7 @@ const Home = () => {
               <CardContent>
                 <Stack direction="row" alignItems="center" spacing={1} mb={1}>
                   <MonitorHeart color="error" />
-                  <Typography variant="h6">Latest Heart Attack</Typography>
+                  <Typography variant="h6">Latest HA Prediction</Typography>
                 </Stack>
                 <Typography variant="h3" sx={{ fontWeight: 700 }}>
                   {formatProbability(
@@ -494,12 +492,33 @@ const Home = () => {
             </Card>
           )}
 
+          {stats.latestStroke && (
+              <Card elevation={3} sx={{ height: '100%' }}>
+                <CardContent>
+                  <Stack direction="row" alignItems="center" spacing={1} mb={1}>
+                    <Grain color={'error'} />
+                    <Typography variant="h6">Latest Stroke Prediction</Typography>
+                  </Stack>
+                  <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                    {formatProbability(
+                        normalizeProbabilityToPercentage(
+                            stats.latestStroke.predictionProbability
+                        )
+                    )}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {formatDateTime(stats.latestStroke.createdAt)}
+                  </Typography>
+                </CardContent>
+              </Card>
+          )}
+
           {stats.latestHabits && (
             <Card elevation={3} sx={{ height: '100%' }}>
               <CardContent>
                 <Stack direction="row" alignItems="center" spacing={1} mb={1}>
                   <Spa color="success" />
-                  <Typography variant="h6">Latest Wellness</Typography>
+                  <Typography variant="h6">Latest Wellness Score</Typography>
                 </Stack>
                 <Typography variant="h3" sx={{ fontWeight: 700 }}>
                   {formatWellnessScore(stats.latestHabits.wellnessScore)}
@@ -518,33 +537,45 @@ const Home = () => {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-            gap: 3,
+            gridTemplateColumns: 'repeat(auto-fit, minmax(490px, 1fr))',
+            gap: 9,
             mb: 4,
           }}
         >
           {/* Diabetes Trend */}
           {diabetesChartData.length > 0 && (
-            <DiabetesTrendChart
-              data={diabetesChartData}
-              avgProb={stats.avgDiabetesProb}
-            />
+              <RiskTrendChart
+                  title="Diabetes Risk Trend"
+                  avgProb={stats.avgDiabetesProb}
+                  data={diabetesChartData}
+                  icon={<Bloodtype color="error" />}
+                  color="error"
+                  lineColor="#d32f2f"
+              />
           )}
 
           {/* Heart Attack Trend */}
           {heartAttackChartData.length > 0 && (
-            <HeartAttackTrendChart
-              data={heartAttackChartData}
-              avgProb={stats.avgHeartAttackProb}
-            />
+              <RiskTrendChart
+                  title="Heart Attack Risk Trend"
+                  avgProb={stats.avgHeartAttackProb}
+                  data={heartAttackChartData}
+                  icon={<MonitorHeart color="error" />}
+                  color="error"
+                  lineColor="#d32f2f"
+              />
           )}
 
           {/* Stroke Trend */}
           {strokeChartData.length > 0 && (
-            <StrokeTrendChart
-              data={strokeChartData}
-              avgProb={stats.avgStrokeProb}
-            />
+              <RiskTrendChart
+                  title="Stroke Risk Trend"
+                  avgProb={stats.avgStrokeProb}
+                  data={strokeChartData}
+                  icon={<Grain color="error" />}
+                  color="error"
+                  lineColor="#d32f2f"
+              />
           )}
 
           {/* Wellness Score Trend */}
