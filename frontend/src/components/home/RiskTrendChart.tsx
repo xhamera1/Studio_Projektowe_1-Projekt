@@ -50,6 +50,7 @@ const RiskTrendChart = ({
                                 data: data.map((d) => d.probability),
                                 label: title,
                                 color: lineColor,
+                                curve: 'monotoneX',
                             },
                         ]}
                         xAxis={[

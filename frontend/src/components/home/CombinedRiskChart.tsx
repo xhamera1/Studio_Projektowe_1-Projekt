@@ -39,6 +39,7 @@ const CombinedRiskChart = ({
                       data: data.diabetesData,
                       label: 'Diabetes',
                       color: '#d32f2f',
+                      curve: 'monotoneX' as const,
                     },
                   ]
                 : []),
@@ -48,6 +49,7 @@ const CombinedRiskChart = ({
                       data: data.heartAttackData,
                       label: 'Heart Attack',
                       color: '#f57c00',
+                      curve: 'monotoneX' as const
                     },
                   ]
                 : []),
@@ -57,6 +59,7 @@ const CombinedRiskChart = ({
                       data: data.strokeData,
                       label: 'Stroke',
                       color: '#1976d2',
+                      curve: 'monotoneX' as const
                     },
                   ]
                 : []),
